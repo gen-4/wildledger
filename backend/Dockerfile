@@ -1,5 +1,6 @@
 # Build stage
-FROM eclipse-temurin:25-jdk AS builder
+FROM eclipse-temurin:25-jdk-alpine AS build
+RUN apk add --no-cache maven
 
 WORKDIR /app
 COPY pom.xml .
@@ -8,11 +9,11 @@ COPY src ./src
 RUN mvn clean package -B
 
 # Run stage
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:25-jre-alpine
 
 RUN mkdir -p /var/log/wildledger
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
