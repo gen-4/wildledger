@@ -12,7 +12,7 @@ FROM eclipse-temurin:25-jre
 
 RUN mkdir -p /var/log/wildledger
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
 
