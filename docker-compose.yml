@@ -1,0 +1,18 @@
+services:
+    wildledger_db:
+        image: postgres
+        container_name: wildledger_db
+
+        ports:
+            - "5432:5432"
+
+        env_file: "./.env"
+
+    wildledger_cache:
+        image: redis:7-alpine
+        container_name: wildledger_cache
+
+        ports:
+            - "6379:6379"
+
+        env_file: "./.env"
