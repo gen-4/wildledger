@@ -9,6 +9,10 @@ spring:
             minimum-idle: 5
             idle-timeout: 300000
 
+    sql:
+        init:
+            mode: always
+
     data:
         redis:
             host: localhost
@@ -19,6 +23,8 @@ spring:
         enabled: false
 
     jpa:
+        hibernate:
+            ddl-auto: create-drop
         show-sql: true
         defer-datasource-initialization: true
 

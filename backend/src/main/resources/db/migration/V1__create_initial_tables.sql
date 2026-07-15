@@ -15,9 +15,9 @@ CREATE TABLE users (
 );
 
 CREATE TABLE users_roles (
-    users_id BIGINT NOT NULL REFERENCES users(id),
+    user_id BIGINT NOT NULL REFERENCES users(id),
     roles_id BIGINT NOT NULL REFERENCES roles(id),
-    PRIMARY KEY (users_id, roles_id)
+    PRIMARY KEY (user_id, roles_id)
 );
 
 INSERT INTO roles (role) VALUES ('USER'), ('ADMIN');
