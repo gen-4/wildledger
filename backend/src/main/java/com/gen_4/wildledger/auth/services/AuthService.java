@@ -17,13 +17,16 @@ import com.gen_4.wildledger.auth.dtos.LoginRequest;
 import com.gen_4.wildledger.auth.dtos.RefreshTokenRequest;
 import com.gen_4.wildledger.auth.dtos.RegisterRequest;
 import com.gen_4.wildledger.auth.dtos.conversors.UserDtoConversor;
+import com.gen_4.wildledger.auth.models.RoleOptions;
 import com.gen_4.wildledger.auth.models.User;
+import com.gen_4.wildledger.auth.repositories.RoleRepository;
 import com.gen_4.wildledger.auth.repositories.UserRepository;
 import com.gen_4.wildledger.auth.utils.JwtTokenProvider;
 
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,7 @@ public class AuthService {
     private static final String REFRESH_TOKEN_KEY_PREFIX = "refresh_token:";
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate<String, String> redisTemplate;
@@ -55,6 +59,8 @@ public class AuthService {
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setLastLogin(Timestamp.from(Instant.now()));
+        user.setRoles(List.of(roleRepository.findByRole(RoleOptions.USER).orElse(null)));
         userRepository.save(user);
 
         log.info("User registered successfully: username='{}', id={}", user.getUsername(), user.getId());
