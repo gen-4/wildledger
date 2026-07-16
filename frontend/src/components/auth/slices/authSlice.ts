@@ -7,7 +7,7 @@ import type { AuthState } from '@/store/types';
 
 
 const ACCESS_TOKEN_KEY = 'accessToken';
-const REFRESH_TOKEN_KEY = 'accessToken';
+const REFRESH_TOKEN_KEY = 'refreshToken';
 
 export const login = createAsyncThunk<
   AuthResponse,
@@ -41,8 +41,8 @@ export const register = createAsyncThunk<
       return rejectWithValue(error.message || 'Registration failed');
     }
     const data: AuthResponse = await response.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
+    localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
     return data;
   } catch (error) {
     return rejectWithValue((error as Error).message || 'Registration failed');
@@ -55,13 +55,13 @@ export const logout = createAsyncThunk<
   { rejectValue: string }
 >('auth/logout', async () => {
   try {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     await api.post('/auth/logout', { refreshToken });
   } catch {
     // Ignore errors on logout
   } finally {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
   }
 });
 
@@ -71,20 +71,20 @@ export const refreshToken = createAsyncThunk<
   { rejectValue: string }
 >('auth/refreshToken', async (_, { rejectWithValue }) => {
   try {
-    const refreshTokenValue = localStorage.getItem('refreshToken');
-    const response = await api.post('/auth/refresh', { refreshToken: refreshTokenValue });
+    const refreshTokenValue = localStorage.getItem(REFRESH_TOKEN_KEY);
+    const response = await api.post('/auth/refresh', { refreshToken: refreshTokenValue }, false);
     if (!response.ok) {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.removeItem(ACCESS_TOKEN_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
       return rejectWithValue('Token refresh failed');
     }
     const data: AuthResponse = await response.json();
-    localStorage.setItem('accessToken', data.accessToken);
-    localStorage.setItem('refreshToken', data.refreshToken);
+    localStorage.setItem(ACCESS_TOKEN_KEY, data.accessToken);
+    localStorage.setItem(REFRESH_TOKEN_KEY, data.refreshToken);
     return data;
   } catch (error) {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem(REFRESH_TOKEN_KEY);
     return rejectWithValue('Token refresh failed');
   }
 });
@@ -95,7 +95,6 @@ const authSlice = createSlice({
     user: null,
     accessToken: typeof localStorage !== 'undefined' ? localStorage.getItem(ACCESS_TOKEN_KEY) : null,
     refreshToken: typeof localStorage !== 'undefined' ? localStorage.getItem(REFRESH_TOKEN_KEY) : null,
-    isAuthenticated: typeof localStorage !== 'undefined' ? !!localStorage.getItem(ACCESS_TOKEN_KEY) : false,
     loading: false,
     error: null,
   } as AuthState,
@@ -112,7 +111,6 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
         state.user = action.payload.user;
@@ -120,7 +118,6 @@ const authSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        state.isAuthenticated = false;
       })
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -128,7 +125,6 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.isAuthenticated = true;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
         state.user = action.payload.user;
@@ -136,22 +132,18 @@ const authSlice = createSlice({
       .addCase(register.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        state.isAuthenticated = false;
       })
       .addCase(logout.fulfilled, (state) => {
-        state.isAuthenticated = false;
         state.accessToken = null;
         state.refreshToken = null;
         state.user = null;
       })
       .addCase(refreshToken.fulfilled, (state, action) => {
-        state.isAuthenticated = true;
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
         state.user = action.payload.user;
       })
       .addCase(refreshToken.rejected, (state) => {
-        state.isAuthenticated = false;
         state.accessToken = null;
         state.refreshToken = null;
       });

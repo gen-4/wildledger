@@ -1,9 +1,30 @@
 :root {
+    --green-lighter: #48D900;
+    --green-light: #3BB000;
+    --green: #2B8200;
+    --green-dark: #1F5E00;
+    --green-darker: #123600;
+
+    --grey-25: #6F7E683A;
+    --grey-50: #6F7E6883;
+    --grey: #6F7E68;
+    
+    --white-25: #ffffff38;
 
 
-    --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-    --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-    --mono: ui-monospace, Consolas, monospace;
+    --success: #77D748;
+    --warning: #827C00;
+    --error: #822700;
+    --info: #004E82;
+
+    --text-dark: #0E2900;
+    --text: #CBE7BD;
+    --text-placeholder: #CBE7BD3A;
+    --background: #1E221C;
+    --shadow-color: #444643AD;
+
+
+    --markazi: "Markazi Text", serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +43,26 @@
     min-height: 100vh;
 }
 
+.content-font {
+    font-family: var(--markazi);
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    background-color: var(--background);
+    color: var(--text);
+    font-family: var(--markazi);
+    font-size: 1.4rem;
+}
+
+button, input {
+    font-family: var(--markazi);
+    font-size: 1.4rem;
+    color: var(--text);
+}
+
+input { 
+    outline: none;
 }

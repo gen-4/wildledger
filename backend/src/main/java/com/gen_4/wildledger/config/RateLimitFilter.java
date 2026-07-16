@@ -44,13 +44,14 @@ public class RateLimitFilter implements Filter {
             int maxRequests = appProperties.getRateLimit().getMaxRequestsPerMinute();
             long windowMs = appProperties.getRateLimit().getWindowMs();
             RequestCounter counter = requestCounts.computeIfAbsent(clientIp,
-                    k -> new RequestCounter(maxRequests, windowMs));
+                k -> new RequestCounter(maxRequests, windowMs));
 
             if (counter.isRateLimited()) {
                 log.warn("Rate limit exceeded for IP {} on {}", clientIp, path);
                 httpResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
                 httpResponse.setContentType("application/json");
                 httpResponse.getWriter().write("{\"status\":429,\"message\":\"Too many requests. Please try again later.\"}");
+                // TODO: This should throw an error
                 return;
             }
             counter.increment();

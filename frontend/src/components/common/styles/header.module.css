@@ -1,0 +1,25 @@
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.2rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--grey-25);
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 3.2rem;
+}
+
+.logo:hover {
+    cursor: pointer;
+}
+
+.userBadge {
+    padding: .25rem 1rem;
+    background-color: var(--green);
+    border-radius: 15px;
+}
