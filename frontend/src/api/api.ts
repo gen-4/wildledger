@@ -14,7 +14,11 @@ const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue = [];
 };
 
-const request = async (endpoint: string, options: RequestInit & { _retry?: boolean } = {}): Promise<Response> => {
+const request = async (
+    endpoint: string, 
+    options: RequestInit & { _retry?: boolean } = {},
+    useAcessToken: boolean = true
+): Promise<Response> => {
     const url = `${API_URL}${endpoint}`;
     const token = localStorage.getItem('accessToken');
 
@@ -27,7 +31,7 @@ const request = async (endpoint: string, options: RequestInit & { _retry?: boole
         },
     };
 
-    if (token) {
+    if ( useAcessToken && token ) {
         config.headers['Authorization'] = `Bearer ${token}`;
     }
 
@@ -98,11 +102,15 @@ const request = async (endpoint: string, options: RequestInit & { _retry?: boole
 export const api = {
   get: (endpoint: string) => request(endpoint, { method: 'GET' }),
 
-  post: (endpoint: string, body?: unknown) =>
-    request(endpoint, {
-      method: 'POST',
-      body: JSON.stringify(body),
-    }),
+  post: (endpoint: string, body?: unknown, useAcessToken: boolean = true) =>
+    request(
+        endpoint, 
+        {
+        method: 'POST',
+        body: JSON.stringify(body)
+        },
+        useAcessToken
+    ),
 
   put: (endpoint: string, body?: unknown) =>
     request(endpoint, {
