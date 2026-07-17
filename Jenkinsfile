@@ -24,7 +24,7 @@ node {
 		echo 'Building web image...'
 		dir('frontend') {
 			retry(3) {
-				app = docker.build("wildledger_web_image:latest", "--build-arg VITE_BASE_PATH=/wildledger/ --build-arg VITE_API_URL=https://cronushub.ddns.net/wildledger-api .")
+				app = docker.build("wildledger_web_image:latest", "--build-arg BASE_URL=/wildledger/ --build-arg VITE_API_URL=https://cronushub.ddns.net/wildledger-api/api/0.1.0 .")
 			}
 		}
 		echo 'Image built'
