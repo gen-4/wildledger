@@ -11,7 +11,7 @@ const Home = () => {
 
     return (
         <div>
-            { !isAuthenticated && <Button text="Register" onClick={ () => navigate("/register") } /> }
+            { !isAuthenticated && <Button text="Register" onClick={ () => navigate("/signup") } /> }
         </div>
     );
 };
