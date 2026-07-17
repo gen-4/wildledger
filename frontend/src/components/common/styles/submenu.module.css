@@ -1,0 +1,25 @@
+.submenu {
+    position: absolute;
+    top: calc(100% + .5rem);
+    right: 0;
+    min-width: 100%;
+    padding: .65rem 0;
+    background-color: var(--green-25);
+    border-radius: 15px;
+}
+
+.separator {
+    height: 1px;
+    margin: .2rem 0;
+    border: none;
+    background: linear-gradient(to right, transparent, var(--text) 25%, var(--text) 75%, transparent);
+}
+
+.item {
+    padding: 0 1rem;
+}
+
+.item:hover {
+    cursor: pointer;
+    background-color: var(--green-25)
+}

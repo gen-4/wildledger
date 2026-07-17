@@ -10,7 +10,7 @@ ON CONFLICT (username) DO NOTHING;
 -- Assign ADMIN role to admin user
 INSERT INTO users_roles (user_id, roles_id)
 SELECT u.id, r.id FROM users u, roles r
-WHERE u.username = 'admin' AND r.role IN ['ADMIN', 'USER'] 
+WHERE u.username = 'admin' AND r.role IN ('ADMIN', 'USER') 
 AND NOT EXISTS (
     SELECT 1 FROM users_roles ur WHERE ur.user_id = u.id AND ur.roles_id = r.id
 );

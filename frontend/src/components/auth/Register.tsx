@@ -3,13 +3,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { register } from "@/components/auth/slices/authSlice";
-import type { AppDispatch } from "@/store";
+import { addMessage, type AppDispatch } from "@/store";
+import { MessageType } from "@/store/types";
 import { isAuthenticatedSelector } from "@/components/auth/selectors";
 import { Button } from "@/components/common";
 
 import styles from '@/components/auth/styles/authentication.module.css';
 
-function Register() {
+function Register() { // TODO: Doube password. Controll password has more than 6 characters
     const navigate = useNavigate();
     const isAuthenticated = useSelector(isAuthenticatedSelector);
     const [ username, setUsername ] = useState("");
@@ -23,7 +24,11 @@ function Register() {
     }, [isAuthenticated, navigate]);
 
     const onSubmitClick = async () => {
-        dispatch(register({ username, password }));
+        try{
+            dispatch(register({ username, password })).unwrap();
+        } catch (error) {
+            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string}));
+        }
     };
 
     return (

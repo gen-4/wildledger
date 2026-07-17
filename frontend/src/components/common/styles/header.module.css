@@ -19,7 +19,15 @@
 }
 
 .userBadge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .25rem;
     padding: .25rem 1rem;
     background-color: var(--green);
     border-radius: 15px;
+}
+
+.userBadge:hover {
+    cursor: pointer;
 }

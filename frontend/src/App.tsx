@@ -7,7 +7,8 @@ import { Home } from '@/components/home';
 import { Header } from '@/components/common';
 import styles from '@/app.module.css';
 import { isAuthenticatedSelector, refreshTokenSelector } from '@/components/auth/selectors';
-import type { AppDispatch } from '@/store';
+import { addMessage, type AppDispatch } from '@/store';
+import { MessageType } from '@/store/types';
 import { refreshToken as refreshTokenAction } from '@/components/auth/slices/authSlice';
 
 function App() {
@@ -17,7 +18,11 @@ function App() {
 
     useEffect(() => {
         if (!isAuthenticated && refreshToken) {
-            dispatch(refreshTokenAction());
+            try {
+                dispatch(refreshTokenAction()).unwrap();
+            } catch (error) {
+                dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string}));
+            }
         }
     }, [dispatch]);
 

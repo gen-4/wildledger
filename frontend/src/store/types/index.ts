@@ -8,3 +8,22 @@ export interface AuthState {
     loading: boolean;
     error: string | null | undefined;
 };
+
+export const MessageType = {
+    INFO: 'INFO',
+    WARNING: 'WARNING',
+    ERROR: 'ERROR',
+    SUCCESS: 'SUCCESS',
+} as const;
+
+export type MessageType = typeof MessageType[keyof typeof MessageType];
+
+export interface Message {
+    id: string;
+    type: MessageType;
+    message: string;
+}
+
+export interface MessagesState {
+    messages: Array<Message>
+};

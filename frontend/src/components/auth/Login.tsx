@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import { isAuthenticatedSelector } from "@/components/auth/selectors";
 import { login } from "@/components/auth/slices/authSlice";
-import type { AppDispatch } from "@/store";
+import { addMessage, type AppDispatch } from "@/store";
+import { MessageType } from "@/store/types";
 import { Button } from "@/components/common";
 
 import styles from '@/components/auth/styles/authentication.module.css';
@@ -18,14 +19,18 @@ function Login() {
 
     useEffect(() => {
         if (isAuthenticated) {
-            console.log("authenticated", isAuthenticated)
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
 
 
     const onSubmitClick = async () => {
-        dispatch(login({ username, password }));
+        try{
+            dispatch(login({ username, password })).unwrap();
+        } catch (error) {
+            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string}));
+        }
+
     };
 
     return (
@@ -44,7 +49,7 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)} 
                 placeholder="password" 
             />
-            <Button text="Submit" onClick={() => onSubmitClick()} />
+            <Button text="Submit" onClick={() => onSubmitClick()} cover />
         </div>
     );
 };
