@@ -1,8 +1,8 @@
 # Build stage
 FROM node:26-alpine AS build
 
-ARG VITE_API_URL=http://localhost:8080/api
-ARG VITE_BASE_PATH=/
+ARG VITE_API_URL=https://cronushub.ddns.net/wildledger-api/api/0.1.0
+ARG BASE_URL=/wildledger/
 
 WORKDIR /app
 COPY package*.json ./
