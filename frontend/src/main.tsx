@@ -9,7 +9,7 @@ import store from '@/store';
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <Provider store={store}>
-            <BrowserRouter basename={import.meta.env.BASE_URL || ''}>
+            <BrowserRouter basename={import.meta.env.VITE_BASE_PATH || ''}>
                 <App />
             </BrowserRouter>
         </Provider>

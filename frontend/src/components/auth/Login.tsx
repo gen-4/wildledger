@@ -24,14 +24,10 @@ function Login() {
     }, [isAuthenticated, navigate]);
 
 
-    const onSubmitClick = async () => {
-        try{
-            dispatch(login({ username, password })).unwrap();
-        } catch (error) {
-            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string}));
-        }
-
-    };
+    const onSubmitClick = async () =>
+        dispatch(login({ username, password })).unwrap()
+        .catch((error) => 
+            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string})));
 
     return (
         <div className={ styles.authCard }>

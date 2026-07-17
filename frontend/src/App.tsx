@@ -18,11 +18,9 @@ function App() {
 
     useEffect(() => {
         if (!isAuthenticated && refreshToken) {
-            try {
-                dispatch(refreshTokenAction()).unwrap();
-            } catch (error) {
-                dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string}));
-            }
+            dispatch(refreshTokenAction()).unwrap()
+            .catch((error) => 
+                dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string})));
         }
     }, [dispatch]);
 

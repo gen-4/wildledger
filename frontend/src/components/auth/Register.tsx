@@ -23,13 +23,10 @@ function Register() { // TODO: Doube password. Controll password has more than 6
         }
     }, [isAuthenticated, navigate]);
 
-    const onSubmitClick = async () => {
-        try{
-            dispatch(register({ username, password })).unwrap();
-        } catch (error) {
-            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string}));
-        }
-    };
+    const onSubmitClick = async () => 
+        dispatch(register({ username, password })).unwrap()
+        .catch((error) => 
+            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string})));
 
     return (
         <div className={ styles.authCard }>
