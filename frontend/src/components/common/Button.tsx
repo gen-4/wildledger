@@ -1,8 +1,8 @@
 import styles from '@/components/common/styles/button.module.css';
 
-const Button = ({ text, onClick }: { text: string, onClick?: () => void}) => {
+const Button = ({ text, onClick, cover }: { text: string, onClick?: () => void, cover?: boolean}) => {
     return (
-        <button className={ styles.button } onClick={ onClick } >
+        <button className={ `${styles.button} ${cover && styles.cover}` } onClick={ onClick } >
             { text }
         </button>
     );
