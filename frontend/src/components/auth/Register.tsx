@@ -44,7 +44,7 @@ function Register() { // TODO: Doube password. Controll password has more than 6
                 onChange={(e) => setPassword(e.target.value)} 
                 placeholder="password" 
             />
-            <Button text="Submit" onClick={() => onSubmitClick()} />
+            <Button text="Submit" onClick={() => onSubmitClick()} cover />
         </div>
     );
 };
