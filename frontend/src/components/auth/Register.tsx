@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect, type ChangeEvent, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { register } from "@/components/auth/slices/authSlice";
@@ -18,8 +18,6 @@ function Register() {
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
     const [ secondPassword, setSecondPassword ] = useState("");
-    const [ passwordWarning, setPasswordWarning ] = useState("");
-    const [ secondPasswordWarning, setSecondPasswordWarning ] = useState("");
     const dispatch: AppDispatch = useDispatch();
 
     useEffect(() => {
@@ -28,7 +26,9 @@ function Register() {
         }
     }, [isAuthenticated, navigate]);
 
-    const onSubmitClick = async () => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         if (isLoading) {
             return;
         }
@@ -52,57 +52,32 @@ function Register() {
             })));
     }
 
-    const disabled = useMemo(() => {
-        return !(
-            username.length > 0 &&
-            password.length > 5 &&
-            password === secondPassword
-        );
-    }, [username, password, secondPassword]);
+    const passwordWarning =
+        password.length > 0 && password.length < 6
+            ? "Password must be at least 6 characters long"
+            : "";
 
-    const onPasswordChange = (e: ChangeEvent<HTMLInputElement>)  => {
-        setPassword(e.target.value);
-        if (e.target.value.length > 5 || e.target.value.length === 0) {
-            setPasswordWarning("");
+    const secondPasswordWarning =
+        secondPassword.length > 0 && password !== secondPassword
+            ? "Reentered password must be the same as first password"
+            : "";
 
-        } else {
-            setPasswordWarning("Password must be at least 6 characters long");
-        }
-        validateSecondPassword(secondPassword, e.target.value);
-    };
-
-    const validateSecondPassword = (value: string, password: string) => {
-        if (value === password || value.length === 0) {
-            setSecondPasswordWarning("");
-
-        } else {
-            setSecondPasswordWarning("Reentered password must be the same as first password");
-        }
-    };
-
-    const onSecondPasswordChange = (e: ChangeEvent<HTMLInputElement>)  => {
-        setSecondPassword(e.target.value);
-        validateSecondPassword(e.target.value, password);
-    };
-
-    const onUsernameChange = (e: ChangeEvent<HTMLInputElement>)  => {
-        setUsername(e.target.value);
-    };
+    const disabled = isLoading || !username || password.length < 6 || password !== secondPassword;
 
     return (
-        <div className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.authCard }>
             <input 
                 className={ styles.input }
                 type="text" 
                 value={ username } 
-                onChange={ onUsernameChange } 
+                onChange={ (e) => setUsername(e.target.value) } 
                 placeholder="username" 
             />
             <input 
                 className={ `${styles.input} ${styles.withWarning}` }
                 type="password" 
                 value={ password } 
-                onChange={ onPasswordChange } 
+                onChange={ (e) => setPassword(e.target.value) } 
                 placeholder="password" 
             />
             <span className={ styles.warning }>{ passwordWarning }</span>
@@ -110,12 +85,13 @@ function Register() {
                 className={ `${styles.input} ${styles.withWarning}` }
                 type="password" 
                 value={ secondPassword } 
-                onChange={ onSecondPasswordChange } 
+                onChange={ (e) => setSecondPassword(e.target.value) } 
                 placeholder="reenter password" 
             />
             <span className={ styles.warning }>{ secondPasswordWarning }</span>
-            <Button text="Submit" onClick={() => onSubmitClick()} cover disabled={ disabled || isLoading } />
-        </div>
+            
+            <Button type="submit" text="Submit" cover disabled={ disabled } />
+        </form>
     );
 };
 
