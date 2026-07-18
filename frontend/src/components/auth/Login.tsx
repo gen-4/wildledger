@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { isAuthenticatedSelector } from "@/components/auth/selectors";
+import { isAuthenticatedSelector, isLoadingSelector } from "@/components/auth/selectors";
 import { login } from "@/components/auth/slices/authSlice";
 import type { AppDispatch } from "@/store";
 import { addMessage } from "@/store/appSlice";
@@ -13,10 +13,12 @@ import styles from '@/components/auth/styles/authentication.module.css';
 
 function Login() {
     const isAuthenticated = useSelector(isAuthenticatedSelector);
+    const isLoading = useSelector(isLoadingSelector);
     const navigate = useNavigate();
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
     const dispatch: AppDispatch = useDispatch();
+    const disabled = !username || !password || isLoading;
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -25,7 +27,12 @@ function Login() {
     }, [isAuthenticated, navigate]);
 
 
-    const onSubmitClick = async () =>
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (isLoading) {
+            return;
+        }
+
         dispatch(login({ username, password })).unwrap()
         .then(() => 
             dispatch(addMessage({
@@ -43,9 +50,10 @@ function Login() {
                 autoDismiss: true,
                 dismissing: false
             })));
+    }
 
     return (
-        <div className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.authCard }>
             <input 
                 className={ styles.input }
                 type="text" 
@@ -60,8 +68,8 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)} 
                 placeholder="password" 
             />
-            <Button text="Submit" onClick={() => onSubmitClick()} cover />
-        </div>
+            <Button type="submit" text="Submit" cover disabled={ disabled } />
+        </form>
     );
 };
 

@@ -7,9 +7,10 @@ export const isAuthenticatedSelector = ( state: RootState ) => !!state.auth.user
 
 export const userSelector = ( state: RootState ) => state.auth.user;
 
-export const isUserSelector = ( state: RootState ) => {
-    return state.auth.user && state.auth.user.roles.some( (role) => role.role === RoleOptions.USER);
-}
+export const isUserSelector = ( state: RootState ) => 
+    state.auth.user && state.auth.user.roles.some( (role) => role.role === RoleOptions.USER);
 
 export const isAdminSelector = ( state: RootState ) => 
     state.auth.user && state.auth.user.roles.some( (role) => role.role === RoleOptions.ADMIN);
+
+export const isLoadingSelector = ( state: RootState ) => state.auth.loading;

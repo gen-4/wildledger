@@ -6,16 +6,18 @@ import { register } from "@/components/auth/slices/authSlice";
 import { type AppDispatch } from "@/store";
 import { addMessage } from "@/store/appSlice";
 import { MessageType } from "@/store/types";
-import { isAuthenticatedSelector } from "@/components/auth/selectors";
+import { isAuthenticatedSelector, isLoadingSelector } from "@/components/auth/selectors";
 import { Button } from "@/components/common";
 
 import styles from '@/components/auth/styles/authentication.module.css';
 
-function Register() { // TODO: Doube password. Controll password has more than 6 characters
+function Register() {
     const navigate = useNavigate();
     const isAuthenticated = useSelector(isAuthenticatedSelector);
+    const isLoading = useSelector(isLoadingSelector);
     const [ username, setUsername ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ secondPassword, setSecondPassword ] = useState("");
     const dispatch: AppDispatch = useDispatch();
 
     useEffect(() => {
@@ -24,7 +26,13 @@ function Register() { // TODO: Doube password. Controll password has more than 6
         }
     }, [isAuthenticated, navigate]);
 
-    const onSubmitClick = async () => 
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (isLoading) {
+            return;
+        }
+
         dispatch(register({ username, password })).unwrap()
         .then(() => 
             dispatch(addMessage({
@@ -42,25 +50,48 @@ function Register() { // TODO: Doube password. Controll password has more than 6
                 autoDismiss: true,
                 dismissing: false
             })));
+    }
+
+    const passwordWarning =
+        password.length > 0 && password.length < 6
+            ? "Password must be at least 6 characters long"
+            : "";
+
+    const secondPasswordWarning =
+        secondPassword.length > 0 && password !== secondPassword
+            ? "Reentered password must be the same as first password"
+            : "";
+
+    const disabled = isLoading || !username || password.length < 6 || password !== secondPassword;
 
     return (
-        <div className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.authCard }>
             <input 
                 className={ styles.input }
                 type="text" 
                 value={ username } 
-                onChange={(e) => setUsername(e.target.value)} 
+                onChange={ (e) => setUsername(e.target.value) } 
                 placeholder="username" 
             />
             <input 
-                className={ styles.input }
+                className={ `${styles.input} ${styles.withWarning}` }
                 type="password" 
                 value={ password } 
-                onChange={(e) => setPassword(e.target.value)} 
+                onChange={ (e) => setPassword(e.target.value) } 
                 placeholder="password" 
             />
-            <Button text="Submit" onClick={() => onSubmitClick()} cover />
-        </div>
+            <span className={ styles.warning }>{ passwordWarning }</span>
+            <input 
+                className={ `${styles.input} ${styles.withWarning}` }
+                type="password" 
+                value={ secondPassword } 
+                onChange={ (e) => setSecondPassword(e.target.value) } 
+                placeholder="reenter password" 
+            />
+            <span className={ styles.warning }>{ secondPasswordWarning }</span>
+            
+            <Button type="submit" text="Submit" cover disabled={ disabled } />
+        </form>
     );
 };
 
