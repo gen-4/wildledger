@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, NavLink } from "react-router-dom";
 
 import { Button } from '@/components/common';
 
 import styles from '@/components/common/styles/header.module.css';
 import type { AppDispatch } from "@/store";
-import { isAuthenticatedSelector, refreshTokenSelector, userSelector } from "@/components/auth/selectors";
+import { isAuthenticatedSelector, isUserSelector, refreshTokenSelector, userSelector } from "@/components/auth/selectors";
 import { SubmenuItemType, type SubmenuData } from "@/components/common/types";
 import { logout } from "@/components/auth/slices/authSlice";
 import { Submenu } from "@/components/common";
@@ -19,7 +19,16 @@ const Header = () => {
     const isAuthenticated = useSelector(isAuthenticatedSelector);
     const refreshToken = useSelector(refreshTokenSelector);
     const user = useSelector(userSelector);
+    const isUser = useSelector(isUserSelector);
     const [displaySubmenu, setDispaySubmenu] = useState(false);
+
+    const navigationLinks: Array<{text: string, link: string, display: boolean}> = [
+        {
+            text: 'Sightings',
+            link: '/sightings',
+            display: !!isUser
+        }
+    ];
 
     const submenuData: SubmenuData = [
         {
@@ -27,7 +36,7 @@ const Header = () => {
             text: "Logout",
             action: () => dispatch(logout())
         }
-    ]
+    ];
 
     useEffect(() => {
         const header = headerRef.current;
@@ -49,7 +58,15 @@ const Header = () => {
         <header className={ styles.header } ref={ headerRef }>
             <div className={ styles.logo } onClick={ () => navigate("/") } >Wild Ledger</div>
 
-            <nav></nav>
+            <nav className={ styles.navigation } >
+                { navigationLinks.filter((link) => link.display).map((link, index) => 
+                    <NavLink 
+                        key={ index } 
+                        className={ ({ isActive }) => `${styles.navLink} ${isActive && styles.active}` } 
+                        to={ link.link }
+                    >{ link.text }</NavLink>
+                ) }
+            </nav>
 
             <div className={ styles.userSection}>
                 { isAuthenticated && 

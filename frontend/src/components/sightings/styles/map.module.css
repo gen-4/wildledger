@@ -1,0 +1,6 @@
+.map {
+    height: calc(100vh - var(--header-height, 0px) - 8rem);
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 0 10px 5px var(--shadow-color-bright);
+}
