@@ -9,6 +9,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.gen_4.wildledger.exceptions.RateLimitExceededException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -48,11 +50,7 @@ public class RateLimitFilter implements Filter {
 
             if (counter.isRateLimited()) {
                 log.warn("Rate limit exceeded for IP {} on {}", clientIp, path);
-                httpResponse.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-                httpResponse.setContentType("application/json");
-                httpResponse.getWriter().write("{\"status\":429,\"message\":\"Too many requests. Please try again later.\"}");
-                // TODO: This should throw an error
-                return;
+                throw new RateLimitExceededException("Too many requests. Please try again later");
             }
             counter.increment();
         }
