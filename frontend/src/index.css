@@ -69,3 +69,8 @@ button, input {
 input { 
     outline: none;
 }
+
+.leaflet-control-attribution {
+    background: var(--white-25) !important;
+    opacity: 1;
+}

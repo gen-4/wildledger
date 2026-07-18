@@ -35,7 +35,6 @@ const SetView = () => {
 };
 
 const Sightings = () => {
-    'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}'
     return (
         <MapContainer 
             center={ [42.88075187924244, -8.544497134456442] } 
@@ -44,8 +43,12 @@ const Sightings = () => {
             className={ mapStyles.map } 
         >
             <TileLayer 
-                attribution='<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" 
+                attribution={'&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver ' +
+                    '(Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">' + 
+                    'Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">' +
+                    'OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">' +
+                    'OpenStreetMap</a> contributors'}
+                url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg" 
             />
             <SetView />
         </MapContainer>
