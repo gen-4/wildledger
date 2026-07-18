@@ -1,0 +1,78 @@
+.board {
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    overflow: hidden;
+    z-index: 900;
+}
+
+@keyframes display {
+    from {
+        opacity: 0;
+        transform: translateY(var(--board-height));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message {
+    position: relative;
+    display: flex;
+    gap: .5rem;
+    padding: .4rem 1.2rem;
+    align-items: center;
+    border-radius: 15px;
+    opacity: 0;
+    animation: display .5s ease-in-out forwards;
+}
+
+@keyframes dismiss {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(calc(-1 * var(--board-width)));
+    }
+}
+
+.message.dismissing {
+    animation: dismiss .5s ease-in-out forwards;
+}
+
+.message:hover {
+    cursor: pointer;
+}
+
+.message.info {
+    background-color: var(--info);
+}
+
+.message.success {
+    background-color: var(--success);
+    color: var(--text-dark);
+}
+
+.message.warning {
+    background-color: var(--warning);
+    color: var(--text-dark);
+}
+
+.message.error {
+    background-color: var(--error);
+}
+
+.text {
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

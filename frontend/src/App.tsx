@@ -4,10 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { Login, Register } from '@/components/auth';
 import { Home } from '@/components/home';
-import { Header } from '@/components/common';
+import { Header, MessagesBoard } from '@/components/common';
 import styles from '@/app.module.css';
 import { isAuthenticatedSelector, refreshTokenSelector } from '@/components/auth/selectors';
-import { addMessage, type AppDispatch } from '@/store';
+import type { AppDispatch } from '@/store';
+import { addMessage } from '@/store/appSlice';
 import { MessageType } from '@/store/types';
 import { refreshToken as refreshTokenAction } from '@/components/auth/slices/authSlice';
 
@@ -20,7 +21,13 @@ function App() {
         if (!isAuthenticated && refreshToken) {
             dispatch(refreshTokenAction()).unwrap()
             .catch((error) => 
-                dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string})));
+                dispatch(addMessage({
+                    id: '', 
+                    type: MessageType.ERROR, 
+                    message: error as string, 
+                    autoDismiss: true,
+                    dismissing: false
+                })));
         }
     }, [dispatch]);
 
@@ -34,6 +41,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                 </Routes>
             </div>
+            <MessagesBoard />
         </>
     )
 }

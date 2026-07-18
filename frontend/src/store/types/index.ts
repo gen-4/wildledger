@@ -22,6 +22,8 @@ export interface Message {
     id: string;
     type: MessageType;
     message: string;
+    autoDismiss: boolean;
+    dismissing: boolean;
 }
 
 export interface MessagesState {

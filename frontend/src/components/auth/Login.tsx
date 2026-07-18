@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 import { isAuthenticatedSelector } from "@/components/auth/selectors";
 import { login } from "@/components/auth/slices/authSlice";
-import { addMessage, type AppDispatch } from "@/store";
+import type { AppDispatch } from "@/store";
+import { addMessage } from "@/store/appSlice";
 import { MessageType } from "@/store/types";
 import { Button } from "@/components/common";
 
@@ -26,8 +27,22 @@ function Login() {
 
     const onSubmitClick = async () =>
         dispatch(login({ username, password })).unwrap()
+        .then(() => 
+            dispatch(addMessage({
+                id: '',
+                type: MessageType.SUCCESS,
+                message: "You have successfully logged in",
+                autoDismiss: true,
+                dismissing: false
+            })))
         .catch((error) => 
-            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string})));
+            dispatch(addMessage({
+                id: '', 
+                type: MessageType.ERROR, 
+                message: error as string, 
+                autoDismiss: true,
+                dismissing: false
+            })));
 
     return (
         <div className={ styles.authCard }>
