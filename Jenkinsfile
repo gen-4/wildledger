@@ -22,16 +22,12 @@ node {
 
 	stage('Build web image') {
 		echo 'Building web image...'
-		environment {
-			BASE_URL = "/wildledger/"
-			VITE_API_URL = "https://cronushub.ddns.net/wildledger-api/api/0.1.0"
-		}
 
 		dir('frontend') {
 			retry(3) {
 				app = docker.build("wildledger_web_image:latest", 
-				"--build-arg BASE_URL=${BASE_URL} " +
-				"--build-arg VITE_API_URL=${VITE_API_URL} .")
+				"--build-arg BASE_URL=/wildledger/ " +
+				"--build-arg VITE_API_URL=https://cronushub.ddns.net/wildledger-api/api/0.1.0 .")
 			}
 		}
 		echo 'Image built'
