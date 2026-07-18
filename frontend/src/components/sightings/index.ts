@@ -1,0 +1,1 @@
+export { default as Sightings } from '@/components/sightings/Sightings';

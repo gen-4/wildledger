@@ -5,8 +5,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Login, Register } from '@/components/auth';
 import { Home } from '@/components/home';
 import { Header, MessagesBoard } from '@/components/common';
+import { Sightings } from '@/components/sightings';
 import styles from '@/app.module.css';
-import { isAuthenticatedSelector, refreshTokenSelector } from '@/components/auth/selectors';
+import { isAuthenticatedSelector, isUserSelector, refreshTokenSelector } from '@/components/auth/selectors';
 import type { AppDispatch } from '@/store';
 import { addMessage } from '@/store/appSlice';
 import { MessageType } from '@/store/types';
@@ -15,6 +16,7 @@ import { refreshToken as refreshTokenAction } from '@/components/auth/slices/aut
 function App() {
     const dispatch: AppDispatch = useDispatch();
     const isAuthenticated = useSelector(isAuthenticatedSelector);
+    const isUser = useSelector(isUserSelector);
     const refreshToken = useSelector(refreshTokenSelector);
 
     useEffect(() => {
@@ -34,11 +36,12 @@ function App() {
     return (
         <>
             <Header />
-            <div className={ styles.body }>
+            <div className={ styles.body + ' App' }>
                 <Routes>
                     <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
                     <Route path="/signup" element={!isAuthenticated ? <Register /> : <Navigate to="/" />} />
                     <Route path="/" element={<Home />} />
+                    { isUser && <Route path="/sightings" element={<Sightings />} /> }
                 </Routes>
             </div>
             <MessagesBoard />
