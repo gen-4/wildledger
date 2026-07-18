@@ -39,7 +39,7 @@ const Sightings = () => {
         <MapContainer 
             center={ [42.88075187924244, -8.544497134456442] } 
             minZoom={ 3 } 
-            maxZoom={ 19 } 
+            maxZoom={ 18 } // With this Tile it has to be 18. Any other would be 19
             className={ mapStyles.map } 
         >
             <TileLayer 
