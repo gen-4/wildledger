@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { register } from "@/components/auth/slices/authSlice";
-import { addMessage, type AppDispatch } from "@/store";
+import { type AppDispatch } from "@/store";
+import { addMessage } from "@/store/appSlice";
 import { MessageType } from "@/store/types";
 import { isAuthenticatedSelector } from "@/components/auth/selectors";
 import { Button } from "@/components/common";
@@ -25,8 +26,22 @@ function Register() { // TODO: Doube password. Controll password has more than 6
 
     const onSubmitClick = async () => 
         dispatch(register({ username, password })).unwrap()
+        .then(() => 
+            dispatch(addMessage({
+                id: '',
+                type: MessageType.SUCCESS,
+                message: "Account created",
+                autoDismiss: true,
+                dismissing: false
+            })))
         .catch((error) => 
-            dispatch(addMessage({id: '', type: MessageType.ERROR, message: error as string})));
+            dispatch(addMessage({
+                id: '', 
+                type: MessageType.ERROR, 
+                message: error as string, 
+                autoDismiss: true,
+                dismissing: false
+            })));
 
     return (
         <div className={ styles.authCard }>
