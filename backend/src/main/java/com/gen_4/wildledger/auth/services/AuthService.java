@@ -53,7 +53,7 @@ public class AuthService {
 
         if (userRepository.existsByUsername(request.getUsername())) {
             log.warn("Registration failed: username '{}' already taken", request.getUsername());
-            throw new IllegalArgumentException("Username is already taken");
+            throw new IllegalArgumentException("Invalid username or password. Try with other options");
         }
 
         User user = new User();
