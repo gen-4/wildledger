@@ -31,3 +31,9 @@
     font-size: 1rem;
     color: var(--warning);
 }
+
+@media (max-width: 1000px) {
+    .authCard {
+        padding: 2rem;
+    }
+}

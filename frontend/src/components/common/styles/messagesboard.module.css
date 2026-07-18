@@ -76,3 +76,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+@media (max-width: 1000px) {
+    .board {
+        width: 80%;
+    }
+
+    .text {
+        font-size: 1.2rem;
+    }
+}
