@@ -13,3 +13,11 @@
 .button.cover {
     width: 100%;
 }
+
+.button.disabled {
+    opacity: .35;
+}
+
+.button.disabled:hover {
+    cursor: default;
+}
