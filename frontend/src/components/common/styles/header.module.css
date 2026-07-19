@@ -11,7 +11,14 @@
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     font-size: 3.2rem;
+}
+
+.logoImg {
+    height: 4rem;
 }
 
 .logo:hover {

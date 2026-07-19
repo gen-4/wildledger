@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useLocation, NavLink } from "react-router-dom";
 
 import { Button } from '@/components/common';
-
-import styles from '@/components/common/styles/header.module.css';
 import type { AppDispatch } from "@/store";
 import { isAuthenticatedSelector, isUserSelector, refreshTokenSelector, userSelector } from "@/components/auth/selectors";
 import { SubmenuItemType, type SubmenuData } from "@/components/common/types";
 import { logout } from "@/components/auth/slices/authSlice";
 import { Submenu } from "@/components/common";
+
+import styles from '@/components/common/styles/header.module.css';
 
 const Header = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -56,7 +56,10 @@ const Header = () => {
 
     return (
         <header className={ styles.header } ref={ headerRef }>
-            <div className={ styles.logo } onClick={ () => navigate("/") } >Wild Ledger</div>
+            <div className={ styles.logo } onClick={ () => navigate("/") } >
+                <img className={ styles.logoImg } src="/favicon.svg" alt="Wild Ledger Logo" />
+                Wild Ledger
+            </div>
 
             <nav className={ styles.navigation } >
                 { navigationLinks.filter((link) => link.display).map((link, index) => 
