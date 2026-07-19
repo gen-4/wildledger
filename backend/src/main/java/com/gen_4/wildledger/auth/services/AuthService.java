@@ -93,9 +93,8 @@ public class AuthService {
             throw new LockedException("User " + user.getId() + " " + user.getUsername() + " is banned");
         }
 
-        user.setLastLogin(Timestamp.from(Instant.now()));
         try {
-            userRepository.save(user);
+            userRepository.updateLastLogin(user.getId(), Timestamp.from(Instant.now()));
         
         } catch (Exception e) {
             log.error("Unable to save last login date for user " + user.getUsername(), e);
