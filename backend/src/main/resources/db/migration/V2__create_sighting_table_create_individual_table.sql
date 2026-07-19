@@ -24,7 +24,7 @@ CREATE TABLE sighting (
     updated_at TIMESTAMP,
 
     CONSTRAINT chk_status_options CHECK (status IN 
-        ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELLED', 'FAILED', 'PROCESSING', 'PROCESSED')
+        ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELLED', 'FAILED', 'FAILED_IMAGE', 'PROCESSING', 'PROCESSED')
     ),
     CONSTRAINT chk_latitude_is_valid CHECK (latitude BETWEEN -90 AND 90),
     CONSTRAINT chk_longitude_is_valid  CHECK (longitude BETWEEN -180 AND 180),

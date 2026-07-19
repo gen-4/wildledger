@@ -12,10 +12,18 @@ public class AppProperties {
 
     private RateLimit rateLimit = new RateLimit();
 
+    private Storage storage = new Storage();
+
     @Data
     public static class RateLimit {
         private int maxRequestsPerMinute = 10;
         private long windowMs = 60_000;
+    }
+
+    @Data
+    public static class Storage{
+        private String uploadDir = ".";
+        private int maxFileSize = 10_000;
     }
     
 }

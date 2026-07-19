@@ -6,6 +6,7 @@ public enum SightingStatus {
     CANCELLED,
     UNRECOGNIZED,
     FAILED,
+    FAILED_IMAGE,
     PROCESSING,
     PROCESSED,
     CONFIRMED

@@ -4,9 +4,6 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import com.gen_4.wildledger.sightings.models.Individual;
 import com.gen_4.wildledger.sightings.models.Sighting;
 
