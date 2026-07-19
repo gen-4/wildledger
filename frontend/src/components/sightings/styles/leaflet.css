@@ -1,0 +1,27 @@
+.leaflet-tooltip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: .2rem 2rem;
+    border: 0;
+    border-radius: 20px;
+    font-family: var(--markazi);
+    font-size: 1rem;
+    background-color: var(--grey);
+    box-shadow: 0 0 10px 2px var(--shadow-color-dark);
+}
+
+.leaflet-tooltip span {
+    width: fit-content;
+    height: fit-content;
+    margin: 0;
+}
+
+.leaflet-tooltip span.tooltip-title {
+    font-weight: bolder;
+}
+
+.leaflet-tooltip::before {
+    display: none;
+}
