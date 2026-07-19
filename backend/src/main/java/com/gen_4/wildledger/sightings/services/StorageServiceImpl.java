@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +21,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService {
 
-    private static final List<String> ALLOWED_FILE_TYPES = 
-        List.of("image/png", "image/jpeg", "image/jpg", "image/webp");
+    private static final Tika tika = new Tika();
+
+    private static final Map<String, List<String>> ALLOWED_MIME_TYPES = Map.of(
+        "image/png", List.of("png"),
+        "image/jpeg", List.of("jpg", "jpeg"),
+        "image/webp", List.of("webp")
+    );
     
     @Value("${app.storage.max-file-size}")
     private int MAX_FILE_SIZE;
@@ -45,33 +52,58 @@ public class StorageServiceImpl implements StorageService {
             ));
         }
 
-        if (file.getContentType() == null) {
+        String detectedMimeType;
+        try {
+            detectedMimeType = tika.detect(file.getInputStream());
+        } catch (IOException e) {
             log.error(
-                "Image {} does not have content type", 
-                file.getOriginalFilename()
+                "Failed to detect MIME type for image {}",
+                file.getOriginalFilename(),
+                e
             );
 
             throw new IllegalArgumentException(String.format(
-                "Image %s does not have content type", 
+                "Failed to detect MIME type for image %s",
                 file.getOriginalFilename()
-            )); 
+            ));
         }
 
-        if (ALLOWED_FILE_TYPES.stream()
-            .noneMatch(imageType -> file.getContentType().equals(imageType))) {
-
+        if (!ALLOWED_MIME_TYPES.containsKey(detectedMimeType)) {
             log.error(
-                "Image {}  is not of an allowed type {} != {}", 
-                file.getOriginalFilename(), 
-                file.getContentType(),
-                String.join(" | ", ALLOWED_FILE_TYPES)
+                "Image {} has disallowed MIME type: {}",
+                file.getOriginalFilename(),
+                detectedMimeType
             );
 
             throw new IllegalArgumentException(String.format(
-                "Image %s has unallowed type %s", 
+                "Image %s has disallowed type %s",
                 file.getOriginalFilename(),
-                file.getContentType()
-            )); 
+                detectedMimeType
+            ));
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = originalFilename != null && originalFilename.contains(".")
+            ? originalFilename.substring(originalFilename.lastIndexOf('.') + 1).toLowerCase()
+            : "";
+
+        List<String> validExtensions = ALLOWED_MIME_TYPES.get(detectedMimeType);
+        if (validExtensions.stream().noneMatch(ext -> ext.equalsIgnoreCase(fileExtension))) {
+            log.error(
+                "Image {} extension '{}' does not match detected MIME type {} (expected one of: {})",
+                originalFilename,
+                fileExtension,
+                detectedMimeType,
+                String.join(", ", validExtensions)
+            );
+
+            throw new IllegalArgumentException(String.format(
+                "Image %s has extension '%s' which does not match detected type %s (expected one of: %s)",
+                originalFilename,
+                fileExtension,
+                detectedMimeType,
+                String.join(", ", validExtensions)
+            ));
         }
         
         Path builtPath = Path.of(UPLOAD_DIR, path);
