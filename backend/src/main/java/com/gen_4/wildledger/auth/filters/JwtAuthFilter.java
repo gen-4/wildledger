@@ -105,6 +105,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            request.setAttribute("userId", user.getId());
             log.debug(
                 "Authenticated user '{}' (id={}) for request to {} {}", 
                 user.getUsername(), user.getId(), path, !isFallback ? "" : "via username fallback"

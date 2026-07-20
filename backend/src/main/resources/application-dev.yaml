@@ -35,7 +35,7 @@ spring:
 
 app:
     storage:
-        max-file-size: 10000
+        max-file-size: 10_000_000
 
 logging:
   level:

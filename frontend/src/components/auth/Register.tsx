@@ -9,7 +9,7 @@ import { MessageType } from "@/store/types";
 import { isAuthenticatedSelector, isLoadingSelector } from "@/components/auth/selectors";
 import { Button } from "@/components/common";
 
-import styles from '@/components/auth/styles/authentication.module.css';
+import styles from '@/components/common/styles/form.module.css';
 
 function Register() {
     const navigate = useNavigate();

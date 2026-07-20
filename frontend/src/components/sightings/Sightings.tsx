@@ -1,6 +1,8 @@
 import Map from '@/components/sightings/Map';
 import type { SightingMarker } from '@/components/sightings/types';
 
+import styles from '@/components/sightings/styles/sightings.module.css';
+
 const markers: Array<SightingMarker> = [
     {
         id: 1,
@@ -12,7 +14,9 @@ const markers: Array<SightingMarker> = [
 
 const Sightings = () => {
     return (
-        <Map markers={ markers } />
+        <div className={ styles.mapContainer }>
+            <Map markers={ markers } />
+        </div>
     );
 };
 

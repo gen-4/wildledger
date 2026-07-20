@@ -9,6 +9,11 @@ export interface AuthState {
     error: string | null | undefined;
 };
 
+export interface SightingsState {
+    loading: boolean;
+    error: string | null | undefined;
+};
+
 export const MessageType = {
     INFO: 'INFO',
     WARNING: 'WARNING',

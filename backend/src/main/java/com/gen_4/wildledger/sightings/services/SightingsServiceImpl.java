@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gen_4.wildledger.auth.models.User;
@@ -30,6 +31,7 @@ public class SightingsServiceImpl implements SightingsService {
 
     private final RedisTemplate<String, String> redisTemplate;
     
+    @Transactional
     public Sighting createSighting(
         long userId, 
         double latitude, 

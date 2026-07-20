@@ -37,7 +37,7 @@ const SetView = () => {
     return null;
 };
 
-const Map = ({ markers }: { markers: Array<SightingMarker> }) => {
+const Map = ({ markers }: { markers?: Array<SightingMarker> }) => {
     return (
         <MapContainer 
             center={ [42.88075187924244, -8.544497134456442] } 
@@ -54,7 +54,7 @@ const Map = ({ markers }: { markers: Array<SightingMarker> }) => {
                 url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg" 
             />
             <SetView />
-            {
+            { markers &&
                 markers.map((marker) =>
                     <AnimalMarker 
                         id={ marker.id } 

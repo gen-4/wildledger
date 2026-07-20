@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gen_4.wildledger.sightings.models.Individual;
 import com.gen_4.wildledger.sightings.models.Sighting;
 
@@ -63,9 +64,11 @@ public class User {
 	private List<Role> roles;
 
 	@OneToMany(mappedBy = "reporter")
+	@JsonIgnore
 	private List<Sighting> sightings;
 
 	@OneToMany(mappedBy = "reporter")
+	@JsonIgnore
 	private List<Individual> individuals;
 
 	public boolean isAccountNonExpired() {

@@ -1,0 +1,36 @@
+.pageContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form {
+    height: 100%;
+    width: 45%;
+}
+
+.mapWrapper{
+    height: 100%;
+    width: 50%;
+}
+
+.coordinates {
+    display: flex;
+    gap: 1rem;
+}
+
+@media (max-width: 1000px) {
+    .pageContainer {
+        flex-direction: column;
+    }
+
+    .form {
+        height: 45%;
+        width: 100%;
+    }
+
+    .mapWrapper{
+        height: 50%;
+        width: 100%;
+    }
+}
+

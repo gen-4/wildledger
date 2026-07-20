@@ -17,7 +17,7 @@ const processQueue = (error: Error | null, token: string | null = null) => {
 const request = async (
     endpoint: string, 
     options: RequestInit & { _retry?: boolean } = {},
-    useAcessToken: boolean = true
+    { useAccessToken = true, isJson = true }: { useAccessToken?: boolean; isJson?: boolean; } = {}
 ): Promise<Response> => {
     const url = `${API_URL}${endpoint}`;
     const token = localStorage.getItem('accessToken');
@@ -26,12 +26,12 @@ const request = async (
     const config: RequestInit & { headers: Record<string, string>; _retry?: boolean } = {
         ...fetchOptions,
         headers: {
-        'Content-Type': 'application/json',
         ...(options.headers as Record<string, string> || {}),
         },
     };
+    isJson ? config.headers['Content-Type'] = 'application/json' : null;
 
-    if ( useAcessToken && token ) {
+    if ( useAccessToken && token ) {
         config.headers['Authorization'] = `Bearer ${token}`;
     }
 
@@ -100,25 +100,40 @@ const request = async (
 }
 
 export const api = {
-  get: (endpoint: string) => request(endpoint, { method: 'GET' }),
+    get: (endpoint: string) => request(endpoint, { method: 'GET' }),
 
-  post: (endpoint: string, body?: unknown, useAcessToken: boolean = true) =>
-    request(
-        endpoint, 
-        {
-        method: 'POST',
-        body: JSON.stringify(body)
-        },
-        useAcessToken
-    ),
+    post: (endpoint: string, body?: unknown, useAccessToken: boolean = true) =>
+        request(
+            endpoint, 
+            {
+                method: 'POST',
+                body: JSON.stringify(body)
+            },
+            { useAccessToken }
+        ),
 
-  put: (endpoint: string, body?: unknown) =>
-    request(endpoint, {
-      method: 'PUT',
-      body: JSON.stringify(body),
-    }),
+    postFile: (endpoint: string, file: File, body?: Object) => {
+        const formData = new FormData();
+            formData.append('file', file);
+            formData.append('sightingRequest', new Blob(
+                [JSON.stringify(body)],
+                { type: 'application/json' }
+            ));
 
-  delete: (endpoint: string) => request(endpoint, { method: 'DELETE' }),
+        return request(
+            endpoint, 
+            { method: 'POST', body: formData }, 
+            { isJson: false }
+        );
+    },
+
+    put: (endpoint: string, body?: unknown) =>
+        request(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(body),
+        }),
+
+    delete: (endpoint: string) => request(endpoint, { method: 'DELETE' }),
 };
 
 export default api;
