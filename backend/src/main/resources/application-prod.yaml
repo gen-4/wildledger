@@ -31,7 +31,6 @@ spring:
 
 app:
     storage:
-        upload-dir: /sightings
         max-file-size: 10000
 
 jwt:

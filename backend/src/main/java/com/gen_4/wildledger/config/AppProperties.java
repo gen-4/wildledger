@@ -14,6 +14,8 @@ public class AppProperties {
 
     private Storage storage = new Storage();
 
+    private S3 s3 = new S3();
+
     @Data
     public static class RateLimit {
         private int maxRequestsPerMinute = 10;
@@ -22,8 +24,16 @@ public class AppProperties {
 
     @Data
     public static class Storage{
-        private String uploadDir = ".";
         private int maxFileSize = 10_000;
+    }
+
+    @Data
+    public static class S3{
+        private String endpoint;
+        private String accessKey;
+        private String secretKey;
+        private String bucket;
+        private String region;
     }
     
 }
