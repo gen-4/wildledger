@@ -34,6 +34,7 @@ public class AppProperties {
         private String secretKey;
         private String bucket;
         private String region;
+        private int expirationHours;
     }
     
 }

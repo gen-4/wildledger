@@ -1,6 +1,7 @@
 package com.gen_4.wildledger.sightings.services;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,8 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 @Slf4j
 @Service
@@ -26,6 +29,8 @@ public class StorageServiceImpl implements StorageService {
     private static final Tika tika = new Tika();
 
     private final S3Client s3client;
+
+    private final S3Presigner s3Presigner;
 
     private static final Map<String, List<String>> ALLOWED_MIME_TYPES = Map.of(
         "image/png", List.of("png"),
@@ -38,6 +43,9 @@ public class StorageServiceImpl implements StorageService {
 
     @Value("${app.s3.bucket}")
     private String bucket;
+
+    @Value("${app.s3.expiration-hours")
+    private int expirationHours;
     
     // TODO: Create test for this
     public void saveSightingImage(MultipartFile file, String path) {
@@ -145,6 +153,18 @@ public class StorageServiceImpl implements StorageService {
             throw new SaveFileException(
                 String.format("Failed to save file %s", file.getOriginalFilename()));
         }
+    }
+
+    public String getSightingImage(String path) {
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+            .signatureDuration(Duration.ofHours(expirationHours))
+            .getObjectRequest(req -> req
+                .bucket(bucket)
+                .key(path)
+            )
+            .build();
+        
+        return s3Presigner.presignGetObject(presignRequest).url().toString();
     }
 
 }
