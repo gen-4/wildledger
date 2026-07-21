@@ -53,7 +53,7 @@ function Login() {
     }
 
     return (
-        <form onSubmit={ handleSubmit } className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.formCard }>
             <input 
                 className={ styles.input }
                 type="text" 

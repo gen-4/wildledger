@@ -38,7 +38,15 @@ const request = async (
     const response = await fetch(url, config);
 
     // Handle 401/403 - try refresh token (with mutex)
-    if ((response.status === 401 || response.status === 403) && !options._retry  && endpoint !== '/auth/login') {
+    if ( (response.status === 401 || response.status === 403) && !options._retry  && endpoint !== '/auth/login' ) {
+        if (endpoint === '/auth/refresh') {
+            processQueue(new Error('Refresh failed'));
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            window.location.href = '/login';
+            return response;
+        }
+
         if (isRefreshing) {
             // Queue this request to retry after the ongoing refresh completes
             return new Promise<string>((resolve, reject) => {

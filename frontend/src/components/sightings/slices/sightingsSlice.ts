@@ -1,8 +1,11 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 
 import api from '@/api/api';
 
 import type { SightingsState } from '@/store/types';
+import type { Position } from '@/components/sightings/types';
+
+import { DEFAULT_LOCATION } from '@/components/sightings/constants';
 
 export const create = createAsyncThunk<
     void,
@@ -22,6 +25,7 @@ export const create = createAsyncThunk<
 });
 
 const initialState: SightingsState = {
+    location: { lat: DEFAULT_LOCATION.lat, lng: DEFAULT_LOCATION.lng },
     loading: false,
     error: null
 };
@@ -30,6 +34,9 @@ const sightings = createSlice({
     name: 'sightings',
     initialState,
     reducers: {
+        setLocation: (state, action: PayloadAction<Position>) => {
+            state.location = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -47,4 +54,5 @@ const sightings = createSlice({
     }
 });
 
+export const { setLocation } = sightings.actions;
 export default sightings.reducer;

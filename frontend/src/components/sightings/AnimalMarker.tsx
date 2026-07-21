@@ -6,8 +6,7 @@ import type { SightingMarker } from '@/components/sightings/types';
 
 import '@/components/sightings/styles/leaflet.css'
 
-const AnimalMarker = ({ id, name, location, draggable }: SightingMarker) => {
-    const [position, setPosition] = useState(location);
+const AnimalMarker = ({ id, name, location, draggable, onDragEnd }: SightingMarker) => {
     const markerRef = useRef<L.Marker | null>(null);
     const map = useMap();
     const [zoom, setZoom] = useState(map.getZoom());
@@ -21,7 +20,7 @@ const AnimalMarker = ({ id, name, location, draggable }: SightingMarker) => {
     }, [map]);
 
     const icon: IconOptions = {
-        iconUrl: 'fluke.svg',
+        iconUrl: '/fluke.svg',
         iconSize
     };
 
@@ -29,7 +28,10 @@ const AnimalMarker = ({ id, name, location, draggable }: SightingMarker) => {
             dragend() {
                 const marker = markerRef.current
                 if (marker != null) {
-                    setPosition(marker.getLatLng())
+                    const { lat, lng } = marker.getLatLng();
+                    if (onDragEnd != undefined) {
+                        onDragEnd(lat, lng);
+                    }
                 }
             },
         }), []
@@ -40,12 +42,12 @@ const AnimalMarker = ({ id, name, location, draggable }: SightingMarker) => {
             key={ id }
             draggable={ draggable }
             eventHandlers={ eventHandlers }
-            position={ position }
+            position={ location }
             ref={ markerRef }
             icon={ new Icon(icon) }
         >
             <Tooltip key={ `${zoom}-${id}` } direction="top" offset={ tooltipOffset } opacity={ 1 } permanent>
-                <span>#{ id }</span>
+                { id >= 0 && <span>#{ id }</span> }
                 <span className="tooltip-title">{ name }</span>
             </Tooltip>
         </Marker>

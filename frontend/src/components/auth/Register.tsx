@@ -65,7 +65,7 @@ function Register() {
     const disabled = isLoading || !username || password.length < 6 || password !== secondPassword;
 
     return (
-        <form onSubmit={ handleSubmit } className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.formCard }>
             <input 
                 className={ styles.input }
                 type="text" 

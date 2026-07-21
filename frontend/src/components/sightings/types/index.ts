@@ -11,4 +11,5 @@ export interface Sighting {
 
 export interface SightingMarker extends Sighting {
     draggable?: boolean;
+    onDragEnd?: (latitude: number, longitude: number) => void;
 }

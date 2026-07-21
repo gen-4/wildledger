@@ -1,4 +1,5 @@
 import type { User } from "@/components/auth";
+import type { Position } from "@/components/sightings/types";
 
 export interface AuthState {
     user: User | null;
@@ -10,6 +11,7 @@ export interface AuthState {
 };
 
 export interface SightingsState {
+    location: Position;
     loading: boolean;
     error: string | null | undefined;
 };

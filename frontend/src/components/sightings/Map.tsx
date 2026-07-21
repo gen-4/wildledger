@@ -1,38 +1,25 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
 import 'leaflet/dist/leaflet.css';
 
-import type { AppDispatch } from "@/store";
-import { addMessage } from "@/store/appSlice";
-import { MessageType } from "@/store/types";
 import AnimalMarker from "@/components/sightings/AnimalMarker";
+import { locationSelector } from "@/components/sightings/selectors";
 
 import type { SightingMarker } from "@/components/sightings/types";
 
 import mapStyles from '@/components/sightings/styles/map.module.css';
 
+import { DEFAULT_LOCATION } from "@/components/sightings/constants";
+
 const SetView = () => {
     const map = useMap();
-    const dispatch: AppDispatch = useDispatch();
+    const location = useSelector(locationSelector)
 
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(
-            (position) => map.setView([position.coords.latitude, position.coords.longitude], 13),
-            () => {
-                dispatch(addMessage({
-                    id: '',
-                    type: MessageType.INFO,
-                    message: "Using default location",
-                    autoDismiss: true,
-                    dismissing: false
-                }));
-                map.setView([42.88075187924244, -8.544497134456442], 13);
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
-        );
-    }, [map, dispatch]);
+        map.setView([location.lat, location.lng], 13)
+    }, [map, location]);
     
     return null;
 };
@@ -40,7 +27,7 @@ const SetView = () => {
 const Map = ({ markers }: { markers?: Array<SightingMarker> }) => {
     return (
         <MapContainer 
-            center={ [42.88075187924244, -8.544497134456442] } 
+            center={ [DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng] } 
             minZoom={ 3 } 
             maxZoom={ 18 } // With this Tile it has to be 18. Any other would be 19
             className={ mapStyles.map } 
@@ -57,10 +44,12 @@ const Map = ({ markers }: { markers?: Array<SightingMarker> }) => {
             { markers &&
                 markers.map((marker) =>
                     <AnimalMarker 
+                        key={ marker.id }
                         id={ marker.id } 
                         name={ marker.name }
                         location={ marker.location } 
                         draggable={ marker.draggable } 
+                        onDragEnd={ marker.onDragEnd }
                     />
                 )
             }

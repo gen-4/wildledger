@@ -3,9 +3,17 @@
     justify-content: space-between;
 }
 
+.title {
+    width: 100%;
+    font-size: 2.2rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
 .form {
     height: 100%;
     width: 45%;
+    padding: 2.5rem 1.5rem;
 }
 
 .mapWrapper{
@@ -18,18 +26,47 @@
     gap: 1rem;
 }
 
+.coordinate {
+    width: 100%;
+}
+
+.date {
+    width: 100%;
+}
+
+.file::file-selector-button {
+    padding: .2rem 1rem;
+    border: none;
+    border-radius: 15px;
+    background-color: var(--background);
+    color: var(--text);
+    font-family: var(--markazi);
+    font-size: 1.2rem;
+}
+
 @media (max-width: 1000px) {
     .pageContainer {
         flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    h1.title {
+        font-size: 2rem;
+        margin-bottom: 1rem;
     }
 
     .form {
-        height: 45%;
+        height: fit-content;
         width: 100%;
+        padding: 1rem 2rem;
+    }
+
+    .form > * {
+        font-size: 1rem;
     }
 
     .mapWrapper{
-        height: 50%;
+        height: 100%;
         width: 100%;
     }
 }
