@@ -1,7 +1,6 @@
 package com.gen_4.wildledger.sightings.dtos;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import com.gen_4.wildledger.sightings.models.SightingStatus;
 
@@ -21,17 +20,17 @@ public class SightingDto {
     private double longitude;
     private LocalDateTime sightingDate;
     private LocalDateTime createdAt;
-    private Optional<LocalDateTime> updatedAt;
+    private LocalDateTime updatedAt;
     private SightingStatus status;
     private String imagePath;
     private Float identificationConfidence;
     private String reporter;
     private boolean hasIndividual;
-    private Optional<String> individualReporter;
-    private Optional<Long> individualId;
-    private Optional<String> name;
-    private Optional<String> species;
-    private Optional<LocalDateTime> individualCreatedAt;
-    private Optional<LocalDateTime> individualUpdatedAt;
+    private String individualReporter;
+    private Long individualId;
+    private String name;
+    private String species;
+    private LocalDateTime individualCreatedAt;
+    private LocalDateTime individualUpdatedAt;
     
 }

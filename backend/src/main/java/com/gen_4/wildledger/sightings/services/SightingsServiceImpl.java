@@ -2,8 +2,10 @@ package com.gen_4.wildledger.sightings.services;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.gen_4.wildledger.auth.models.User;
 import com.gen_4.wildledger.auth.repositories.UserRepository;
 import com.gen_4.wildledger.sightings.models.Sighting;
+import com.gen_4.wildledger.sightings.models.SightingProxy;
 import com.gen_4.wildledger.sightings.models.SightingStatus;
 import com.gen_4.wildledger.sightings.repositories.SightingRepository;
 
@@ -57,7 +60,7 @@ public class SightingsServiceImpl implements SightingsService {
         } catch (Exception e) {
             log.warn("Failed to save image for sighting {}. Sighting will be marked as failed_image.", sighting.getId());
             sighting.setStatus(SightingStatus.FAILED_IMAGE);
-            sightingRepository.save(sighting);
+            sighting = sightingRepository.save(sighting);
             throw e;
         }
         log.info("Image saved for sighting {} with path: {}", sighting.getId(), sighting.getImagePath());
@@ -65,7 +68,15 @@ public class SightingsServiceImpl implements SightingsService {
         redisTemplate.opsForValue().set("sighting:" + sighting.getId(), sighting.getImagePath());
         log.info("Sighting {} sent to be processed", sighting.getId());
         
+        Hibernate.initialize(sighting.getReporter().getUsername());
+        Hibernate.initialize(sighting.getIndividual()); 
         return sighting;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SightingProxy> getSightings() {
+        // TODO: This must just return the ones that are in a decent state, prolly confirmed
+        return sightingRepository.findAllWithIndividual();
     }
 
 }

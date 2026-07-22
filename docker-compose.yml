@@ -18,7 +18,7 @@ services:
         env_file: "./.env"
 
     wildledger_s3:
-        image: minio/minio
+        image: minio/minio:latest
         container_name: wildledger_s3
 
         ports:
@@ -27,4 +27,6 @@ services:
         
         env_file: "./.env"
 
-        command: server /data --console-address ":9001"
+        volumes:
+            - ./init_s3.sh:/scripts/init_s3.sh
+        entrypoint: ["/bin/sh", "/scripts/init_s3.sh"]

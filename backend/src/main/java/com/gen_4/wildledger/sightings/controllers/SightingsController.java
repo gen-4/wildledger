@@ -4,13 +4,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gen_4.wildledger.sightings.dtos.SightingDto;
+import com.gen_4.wildledger.sightings.dtos.SightingProxyDto;
 import com.gen_4.wildledger.sightings.dtos.SightingRequestDto;
 import com.gen_4.wildledger.sightings.dtos.conversors.SightingDtoConversor;
+import com.gen_4.wildledger.sightings.dtos.conversors.SightingProxyDtoConversor;
 import com.gen_4.wildledger.sightings.models.Sighting;
 import com.gen_4.wildledger.sightings.services.SightingsService;
+import com.gen_4.wildledger.sightings.services.StorageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +23,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 @RestController
@@ -26,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 public class SightingsController {
 
     private final SightingsService sightingsService;
+
+    private final StorageService storageService;
 
     @PostMapping("/sighting")
     public ResponseEntity<SightingDto> createSighting(
@@ -62,8 +71,18 @@ public class SightingsController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(SightingDtoConversor.toSightingDto(sighting, null));
+            .body(SightingDtoConversor.toSightingDto(sighting));
     }
-    
+
+    @GetMapping("/sightings")
+    public ResponseEntity<List<SightingProxyDto>> getSightings() {
+        return ResponseEntity.status(HttpStatus.OK)
+            .body(SightingProxyDtoConversor.toSightingProxyDtos(sightingsService.getSightings()).stream()
+                .map(sighting -> {
+                    sighting.setImagePath(storageService.getSightingImage(sighting.getImagePath()));
+                    return sighting;
+                }).toList()
+            );
+    }
     
 }

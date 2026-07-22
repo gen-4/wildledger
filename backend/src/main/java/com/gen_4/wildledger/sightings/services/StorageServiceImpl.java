@@ -44,7 +44,7 @@ public class StorageServiceImpl implements StorageService {
     @Value("${app.s3.bucket}")
     private String bucket;
 
-    @Value("${app.s3.expiration-hours")
+    @Value("${app.s3.expiration-hours}")
     private int expirationHours;
     
     // TODO: Create test for this
