@@ -39,7 +39,7 @@ import lombok.ToString;
 public class Sighting {
 
     @Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
