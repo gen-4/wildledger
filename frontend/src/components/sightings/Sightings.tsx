@@ -1,31 +1,44 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Map from '@/components/sightings/Map';
 import type { SightingMarker } from '@/components/sightings/types';
-import { setLocation } from '@/components/sightings/slices/sightingsSlice';
+import { getSightings, setLocation } from '@/components/sightings/slices/sightingsSlice';
 import { addMessage } from '@/store/appSlice';
+import { sightingsSelector } from '@/components/sightings/selectors';
 
 import styles from '@/components/sightings/styles/sightings.module.css';
 
 import type { AppDispatch } from '@/store';
 import { MessageType } from '@/store/types';
 
-const markers: Array<SightingMarker> = [
-    {
-        id: 1,
-        name: "Eli's whale",
-        location: { lat: 42.88075187924244, lng: -8.544497134456442  },
-        draggable: true
-    }
-]
-
 const Sightings = () => {
     const dispatch: AppDispatch = useDispatch();
     const navigate = useNavigate();
+    const sightings = useSelector(sightingsSelector);
+    const markers: Array<SightingMarker> = sightings.map((sighting) => ({
+        ...sighting,
+        draggable: false
+    }))
 
     useEffect(() => {
+        dispatch(getSightings()).unwrap()
+        .then(() => dispatch(addMessage({
+            id: '',
+            message: 'Sightings retrieved',
+            type: MessageType.INFO,
+            autoDismiss: true,
+            dismissing: false
+        })))
+        .catch((error) => dispatch(addMessage({
+            id: '',
+            message: error as string,
+            type: MessageType.ERROR,
+            autoDismiss: true,
+            dismissing: false
+        })));
+        
         navigator.geolocation.getCurrentPosition(
             (position) => dispatch(setLocation({ lat: position.coords.latitude, lng: position.coords.longitude})),
             () =>

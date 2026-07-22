@@ -46,6 +46,8 @@ const Map = ({ markers }: { markers?: Array<SightingMarker> }) => {
                     <AnimalMarker 
                         key={ marker.id }
                         id={ marker.id } 
+                        individualId={ marker.individualId }
+                        imagePath={ marker.imagePath }
                         name={ marker.name }
                         location={ marker.location } 
                         draggable={ marker.draggable } 

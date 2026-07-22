@@ -6,7 +6,7 @@ import type { SightingMarker } from '@/components/sightings/types';
 
 import '@/components/sightings/styles/leaflet.css'
 
-const AnimalMarker = ({ id, name, location, draggable, onDragEnd }: SightingMarker) => {
+const AnimalMarker = ({ id, individualId, imagePath, name, location, draggable, onDragEnd }: SightingMarker) => {
     const markerRef = useRef<L.Marker | null>(null);
     const map = useMap();
     const [zoom, setZoom] = useState(map.getZoom());
@@ -20,7 +20,7 @@ const AnimalMarker = ({ id, name, location, draggable, onDragEnd }: SightingMark
     }, [map]);
 
     const icon: IconOptions = {
-        iconUrl: '/fluke.svg',
+        iconUrl: imagePath? imagePath : '/fluke.svg',
         iconSize
     };
 
@@ -47,7 +47,7 @@ const AnimalMarker = ({ id, name, location, draggable, onDragEnd }: SightingMark
             icon={ new Icon(icon) }
         >
             <Tooltip key={ `${zoom}-${id}` } direction="top" offset={ tooltipOffset } opacity={ 1 } permanent>
-                { id >= 0 && <span>#{ id }</span> }
+                { individualId && <span>#{ individualId }</span> }
                 <span className="tooltip-title">{ name }</span>
             </Tooltip>
         </Marker>

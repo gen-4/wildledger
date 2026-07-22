@@ -38,3 +38,7 @@
     opacity: 1;
     white-space: nowrap;
 }
+
+.leaflet-marker-icon {
+    object-fit: contain;
+}
