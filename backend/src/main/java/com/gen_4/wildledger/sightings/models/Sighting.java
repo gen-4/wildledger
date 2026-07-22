@@ -49,6 +49,7 @@ public class Sighting {
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private Individual individual;
 
+    @Column(precision = 3, scale = 2)
     private Float identificationConfidence;
 
     @Column(nullable = false)
