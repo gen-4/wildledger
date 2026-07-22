@@ -55,3 +55,13 @@
 .navLink.active {
     border-color: var(--green-dark);
 }
+
+@media (max-width: 1000px) {
+    .logo {
+        font-size: 2rem;
+    }
+
+    .logoImg {
+        height: 2rem;
+    }
+}

@@ -27,6 +27,18 @@ spring:
             ddl-auto: create-drop
         show-sql: true
         defer-datasource-initialization: true
+        
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+
+app:
+    storage:
+        max-file-size: 10_000_000
+
+    s3:
+        expiration-hours: 2
 
 logging:
   level:

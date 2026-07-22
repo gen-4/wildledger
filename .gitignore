@@ -139,3 +139,4 @@ nb-configuration.xml
 *.tmp
 *.temp
 .cache/
+init_s3.sh

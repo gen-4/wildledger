@@ -1,4 +1,4 @@
-.authCard {
+.formCard {
     display: flex;
     flex-direction: column;
     padding: 2rem 4rem;
@@ -13,6 +13,14 @@
     border-radius: 15px;
     border: none;
     background-color: var(--grey-50);
+}
+
+.input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: var(--input-date-calendar-icon-color);
+}
+
+.input[type="datetime-local"]::-moz-calendar-picker-indicator {
+  filter: var(--input-date-calendar-icon-color);
 }
 
 .input.withWarning {

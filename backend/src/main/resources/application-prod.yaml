@@ -24,6 +24,18 @@ spring:
         enabled: true
         locations: classpath:db/migration
 
+    servlet:
+        multipart:
+            max-file-size: 10MB
+            max-request-size: 10MB
+
+app:
+    storage:
+        max-file-size: 10_000_000
+
+    s3:
+        expiration-hours: 1
+
 jwt:
     secret: ${JWT_SECRET}
 

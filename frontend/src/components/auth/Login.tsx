@@ -9,7 +9,7 @@ import { addMessage } from "@/store/appSlice";
 import { MessageType } from "@/store/types";
 import { Button } from "@/components/common";
 
-import styles from '@/components/auth/styles/authentication.module.css';
+import styles from '@/components/common/styles/form.module.css';
 
 function Login() {
     const isAuthenticated = useSelector(isAuthenticatedSelector);
@@ -53,7 +53,7 @@ function Login() {
     }
 
     return (
-        <form onSubmit={ handleSubmit } className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.formCard }>
             <input 
                 className={ styles.input }
                 type="text" 

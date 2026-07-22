@@ -9,7 +9,7 @@ import { MessageType } from "@/store/types";
 import { isAuthenticatedSelector, isLoadingSelector } from "@/components/auth/selectors";
 import { Button } from "@/components/common";
 
-import styles from '@/components/auth/styles/authentication.module.css';
+import styles from '@/components/common/styles/form.module.css';
 
 function Register() {
     const navigate = useNavigate();
@@ -65,7 +65,7 @@ function Register() {
     const disabled = isLoading || !username || password.length < 6 || password !== secondPassword;
 
     return (
-        <form onSubmit={ handleSubmit } className={ styles.authCard }>
+        <form onSubmit={ handleSubmit } className={ styles.formCard }>
             <input 
                 className={ styles.input }
                 type="text" 

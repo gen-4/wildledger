@@ -2,13 +2,15 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from '@/components/auth/slices/authSlice';
 import appReducer from '@/store/appSlice';
+import sightingsReducer from '@/components/sightings/slices/sightingsSlice';
 
 
 
 const store = configureStore({
     reducer: {
         auth: authReducer,
-        app: appReducer
+        app: appReducer,
+        sightings: sightingsReducer
     },
 });
 

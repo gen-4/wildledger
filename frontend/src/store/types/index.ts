@@ -1,10 +1,18 @@
 import type { User } from "@/components/auth";
+import type { Position, Sighting } from "@/components/sightings/types";
 
 export interface AuthState {
     user: User | null;
     accessToken: string | null;
     refreshToken: string | null;
     isAuthenticated: boolean;
+    loading: boolean;
+    error: string | null | undefined;
+};
+
+export interface SightingsState {
+    location: Position;
+    sightings: Array<Sighting>;
     loading: boolean;
     error: string | null | undefined;
 };

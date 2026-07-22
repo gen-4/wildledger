@@ -27,6 +27,8 @@
     --shadow-color-dark: #444643E5;
     --shadow-color-bright: #6B6E69AD;
 
+    --input-date-calendar-icon-color: brightness(0) saturate(100%) invert(92%) sepia(14%) saturate(486%) hue-rotate(51deg) brightness(98%) contrast(87%);
+
 
     --markazi: "Markazi Text", serif;
 }
@@ -69,16 +71,5 @@ button, input {
 
 input { 
     outline: none;
-}
-
-.leaflet-bottom.leaflet-right {
-    width: 100%;
-}
-
-.leaflet-control-attribution {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background: var(--white-25) !important;
-    opacity: 1;
+    min-width: 0;
 }

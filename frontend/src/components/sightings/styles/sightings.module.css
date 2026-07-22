@@ -1,0 +1,34 @@
+.mapContainer {
+    position: relative;
+    height: calc(100vh - var(--header-height, 0px) - 8rem);
+}
+
+.addButton {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+    height: 5rem;
+    width: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid var(--background);
+    border-radius: 10000px;
+    background-color: var(--green-dark);
+    box-shadow: 1px 1px 5px 2px var(--shadow-color-dark);
+    z-index: 400;
+}
+
+.addButton span {
+    font-size: 3.5rem;
+}
+
+.addButton:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+    .mapContainer {
+        height: calc(100vh - var(--header-height, 0px) - 5rem);
+    }
+}

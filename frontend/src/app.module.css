@@ -4,6 +4,6 @@
 
 @media (max-width: 1000px) {
     .body {
-        padding: calc(var(--header-height, 0px) + 4rem) 5% 4rem 5%;
+        padding: calc(var(--header-height, 0px) + 4rem) 5% 1rem 5%;
     }
 }

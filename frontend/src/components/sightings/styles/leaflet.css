@@ -25,3 +25,20 @@
 .leaflet-tooltip::before {
     display: none;
 }
+
+.leaflet-bottom.leaflet-right {
+    width: 100%;
+}
+
+.leaflet-control-attribution {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background: var(--white-25) !important;
+    opacity: 1;
+    white-space: nowrap;
+}
+
+.leaflet-marker-icon {
+    object-fit: contain;
+}

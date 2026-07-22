@@ -4,6 +4,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gen_4.wildledger.sightings.models.Individual;
+import com.gen_4.wildledger.sightings.models.Sighting;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +15,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -23,7 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString(exclude = "roles")
+@ToString(exclude = {"roles", "sightings", "individuals"})
 @EqualsAndHashCode(of = "id")
 @Builder
 @NoArgsConstructor
@@ -53,11 +58,18 @@ public class User {
 	@Column(nullable = false)
 	private boolean isEnabled;
 
-
     private Timestamp updatedAt;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Role> roles;
+
+	@OneToMany(mappedBy = "reporter")
+	@JsonIgnore
+	private List<Sighting> sightings;
+
+	@OneToMany(mappedBy = "reporter")
+	@JsonIgnore
+	private List<Individual> individuals;
 
 	public boolean isAccountNonExpired() {
 		return true;

@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gen_4.wildledger.auth.dtos.AuthResponse;
 import com.gen_4.wildledger.auth.dtos.LoginRequest;
@@ -67,6 +68,7 @@ public class AuthService {
         return generateAndStoreTokens(user);
     }
 
+    @Transactional
     public AuthResponse login(LoginRequest request) {
         log.info("Login attempt for username='{}'", request.getUsername());
 
@@ -93,9 +95,8 @@ public class AuthService {
             throw new LockedException("User " + user.getId() + " " + user.getUsername() + " is banned");
         }
 
-        user.setLastLogin(Timestamp.from(Instant.now()));
         try {
-            userRepository.save(user);
+            userRepository.updateLastLogin(user.getId(), Timestamp.from(Instant.now()));
         
         } catch (Exception e) {
             log.error("Unable to save last login date for user " + user.getUsername(), e);
