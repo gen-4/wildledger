@@ -36,6 +36,7 @@ app:
         secret-key: test_pass
         bucket: sightings
         region: us-east-1
+        expiration-hours: 10
 
 jwt:
     secret: testSecretKey12345678901234567890123456
