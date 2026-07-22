@@ -1,5 +1,6 @@
 package com.gen_4.wildledger.sightings.dtos;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.gen_4.wildledger.sightings.models.SightingStatus;
@@ -23,7 +24,7 @@ public class SightingDto {
     private LocalDateTime updatedAt;
     private SightingStatus status;
     private String imagePath;
-    private Float identificationConfidence;
+    private BigDecimal identificationConfidence;
     private String reporter;
     private boolean hasIndividual;
     private String individualReporter;

@@ -1,5 +1,6 @@
 package com.gen_4.wildledger.sightings.models;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -50,7 +51,7 @@ public class Sighting {
     private Individual individual;
 
     @Column(precision = 3, scale = 2)
-    private Float identificationConfidence;
+    private BigDecimal identificationConfidence;
 
     @Column(nullable = false)
     private double latitude;

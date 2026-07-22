@@ -57,7 +57,7 @@ const Header = () => {
     return (
         <header className={ styles.header } ref={ headerRef }>
             <div className={ styles.logo } onClick={ () => navigate("/") } >
-                <img className={ styles.logoImg } src="/favicon.svg" alt="Wild Ledger Logo" />
+                <img className={ styles.logoImg } src={ `${import.meta.env.BASE_URL}favicon.svg` } alt="Wild Ledger Logo" />
                 Wild Ledger
             </div>
 
