@@ -3,9 +3,12 @@ package com.gen_4.wildledger.sightings.services;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.Hibernate;
+import org.springframework.data.redis.connection.stream.RecordId;
+import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +68,12 @@ public class SightingsServiceImpl implements SightingsService {
         }
         log.info("Image saved for sighting {} with path: {}", sighting.getId(), sighting.getImagePath());
 
-        redisTemplate.opsForValue().set("sighting:" + sighting.getId(), sighting.getImagePath());
+        redisTemplate.opsForStream().add(
+            StreamRecords.newRecord()
+                .ofObject(sighting.getImagePath())
+                .withId(RecordId.of("sighting::" + sighting.getId()))
+                .withStreamKey("sighting:creation")
+        );
         log.info("Sighting {} sent to be processed", sighting.getId());
         
         Hibernate.initialize(sighting.getReporter().getUsername());
