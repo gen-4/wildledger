@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.hibernate.Hibernate;
-import org.springframework.data.redis.connection.stream.RecordId;
 import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -38,6 +38,7 @@ public class SightingsServiceImpl implements SightingsService {
     private final RedisTemplate<String, String> redisTemplate;
     
     @Transactional
+    @Override
     public Sighting createSighting(
         long userId, 
         double latitude, 
@@ -55,6 +56,10 @@ public class SightingsServiceImpl implements SightingsService {
             .extension(extension)
             .build();
 
+        String sanitizedUsername = sighting.getReporter().getUsername().replace("/", "_").replace("\\", "_").replace(".", "_");
+        String imagePath = sanitizedUsername + "/" + UUID.randomUUID() + "." + extension;
+        sighting.setImagePath(imagePath);
+
         sighting = sightingRepository.save(sighting);
         log.info("User {} created new sighting with id: {}", userId, sighting.getId());
 
@@ -70,8 +75,7 @@ public class SightingsServiceImpl implements SightingsService {
 
         redisTemplate.opsForStream().add(
             StreamRecords.newRecord()
-                .ofObject(sighting.getImagePath())
-                .withId(RecordId.of("sighting::" + sighting.getId()))
+                .ofObject(Map.of("id", String.valueOf(sighting.getId()), "image_path", sighting.getImagePath()))
                 .withStreamKey("sighting:creation")
         );
         log.info("Sighting {} sent to be processed", sighting.getId());
@@ -82,6 +86,7 @@ public class SightingsServiceImpl implements SightingsService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<SightingProxy> getSightings() {
         // TODO: This must just return the ones that are in a decent state, prolly confirmed
         return sightingRepository.findAllWithIndividual();

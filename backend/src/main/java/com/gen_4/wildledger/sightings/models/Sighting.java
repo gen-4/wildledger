@@ -1,7 +1,6 @@
 package com.gen_4.wildledger.sightings.models;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -82,11 +81,6 @@ public class Sighting {
     protected void onCreate() {
         createdAt = Timestamp.valueOf(LocalDateTime.now());
         updatedAt = Timestamp.valueOf(LocalDateTime.now());
-        if (imagePath == null && reporter != null && this.extension != null) {
-            String sanitizedUsername = reporter.getUsername().replace("/", "_").replace("\\", "_").replace(".", "_");
-            sanitizedUsername = StandardCharsets.UTF_8.decode(StandardCharsets.UTF_8.encode(sanitizedUsername)).toString();
-            this.imagePath = sanitizedUsername + "/" + this.id + "." + this.extension;
-        }
     }
 
     @PreUpdate
