@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import exifr from 'exifr';
 
 import { create } from '@/components/sightings/slices/sightingsSlice';
@@ -19,11 +20,13 @@ import { MessageType } from '@/store/types';
 
 
 const SightingCreation = () => {
+    const navigate = useNavigate()
     const dispatch: AppDispatch = useDispatch();
     const isLoading = useSelector(isLoadingSelector);
     const location = useSelector(locationSelector);
     const [ lat, setLat ] = useState(0);
     const [ lng, setLng ] = useState(0);
+    const [ center, setCenter ] = useState({ lat: location.lat, lng: location.lng })
     const [ file, setFile ] = useState<File | null>(null);
     const [ date, setDate ] = useState('');
     const [ showCoordinates, setShowCoordinates ] = useState(false);
@@ -35,14 +38,16 @@ const SightingCreation = () => {
     const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         dispatch(create({ file: file!, latitude: lat, longitude: lng, sightingDate: new Date(Date.parse(date)) })).unwrap()
-        .then( () =>
+        .then( () => {
             dispatch(addMessage({
                 id: '',
                 message: 'Sighting created',
                 type: MessageType.SUCCESS,
                 autoDismiss: true,
                 dismissing: false
-            })))
+            }));
+            navigate(-1);
+        })
         .catch((error) =>
             dispatch(addMessage({
                 id: '',
@@ -59,43 +64,48 @@ const SightingCreation = () => {
             return;
         }
 
-        exifr.gps(f)
-        .then((gps) => {
-            const latitude = gps.latitude ? gps.latitude : location.lat;
-            const longitude = gps.longitude ? gps.longitude : location.lng;
-            setLat(latitude);
-            setLng(longitude);
-            setMarker({
-                lat: latitude,
-                lng: longitude
-            });
-            dispatch(addMessage({
-                id: '',
-                message: 'Image location autoset',
-                type: MessageType.INFO,
-                autoDismiss: true,
-                dismissing: false
-            }));
-        })
-        .catch(() => {
-            dispatch(addMessage({
-                id: '',
-                message: 'Image location was not found',
-                type: MessageType.INFO,
-                autoDismiss: true,
-                dismissing: false
-            }));
-            
-            setLat(location.lat);
-            setLng(location.lng);
-            setMarker({
-                lat: location.lat,
-                lng: location.lng
-            });
-        }).finally(() => setShowCoordinates(true));
+        try {
+            const metadata = await exifr.parse(f, true);
+            if (Number.isFinite(metadata?.latitude) && Number.isFinite(metadata?.longitude)) {
+                setLat(metadata.latitude);
+                setLng(metadata.longitude);
+                setCenter({ lat: metadata.latitude, lng: metadata.longitude })
+                setMarker({ lat: metadata.latitude, lng: metadata.longitude });
+                dispatch(addMessage({ 
+                    id: '',
+                    message: 'Image location autoset',
+                    type: MessageType.INFO,
+                    autoDismiss: true,
+                    dismissing: false
+                }));
+            } else {
+                setLat(location.lat);
+                setLng(location.lng);
+                setMarker({ lat: location.lat, lng: location.lng });
+                dispatch(addMessage({
+                    id: '',
+                    message: 'Image location was not found',
+                    type: MessageType.INFO,
+                    autoDismiss: true,
+                    dismissing: false
+                }));
+            }
 
-        exifr.parse(f, ['DateTimeOriginal']).then(({ DateTimeOriginal }) => {
-            if (!DateTimeOriginal) {
+            const dateValue = metadata?.DateTimeOriginal
+                ?? metadata?.DateTimeDigitized
+                ?? metadata?.DateTime;
+
+            if (dateValue) {
+                const iso = new Date(dateValue).toISOString().slice(0, 16);
+                setDate(iso);
+                dispatch(addMessage({
+                    id: '',
+                    message: 'Image date autoset',
+                    type: MessageType.INFO,
+                    autoDismiss: true,
+                    dismissing: false
+                }));
+            } else {
                 dispatch(addMessage({
                     id: '',
                     message: 'Image date was not found',
@@ -103,29 +113,23 @@ const SightingCreation = () => {
                     autoDismiss: true,
                     dismissing: false
                 }));
-                return;
             }
-            const iso = (DateTimeOriginal as Date).toISOString().slice(0, 16);
-            setDate(iso);
+        } catch {
+            setLat(location.lat);
+            setLng(location.lng);
             dispatch(addMessage({
                 id: '',
-                message: 'Image date autoset',
+                message: 'Could not read image metadata',
                 type: MessageType.INFO,
                 autoDismiss: true,
                 dismissing: false
             }));
-        })
-        .catch(() =>
-            dispatch(addMessage({
-                id: '',
-                message: 'Image date was not found',
-                type: MessageType.INFO,
-                autoDismiss: true,
-                dismissing: false
-            }))
-        ).finally(() => setShowDate(true));
-
-        setFile(e.target.files?.[0] ?? null);
+        } finally {
+            setShowCoordinates(true);
+            setShowDate(true);
+        }
+        
+        setFile(f);
     };
 
     const onMarkerDrag = (latitude: number, longitude: number) => {
@@ -203,7 +207,7 @@ const SightingCreation = () => {
             </form>
 
             <div className={ styles.mapWrapper } >
-                <Map markers={ markers } />
+                <Map center={ center } markers={ markers } />
             </div>
         </div>
     );

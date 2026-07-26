@@ -7,24 +7,25 @@ import 'leaflet/dist/leaflet.css';
 import AnimalMarker from "@/components/sightings/AnimalMarker";
 import { locationSelector } from "@/components/sightings/selectors";
 
-import type { SightingMarker } from "@/components/sightings/types";
+import type { Position, SightingMarker } from "@/components/sightings/types";
 
 import mapStyles from '@/components/sightings/styles/map.module.css';
 
 import { DEFAULT_LOCATION } from "@/components/sightings/constants";
 
-const SetView = () => {
+const SetView = ({ center}: { center?: Position }) => {
     const map = useMap();
     const location = useSelector(locationSelector)
 
     useEffect(() => {
-        map.setView([location.lat, location.lng], 13)
-    }, [map, location]);
+        const target = center ?? location;
+        map.setView([target.lat, target.lng], 13)
+    }, [map, location, center]);
     
     return null;
 };
 
-const Map = ({ markers }: { markers?: Array<SightingMarker> }) => {
+const Map = ({ center, markers }: { center?: { lat: number, lng: number }, markers?: Array<SightingMarker> }) => {
     return (
         <MapContainer 
             center={ [DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng] } 
@@ -40,7 +41,7 @@ const Map = ({ markers }: { markers?: Array<SightingMarker> }) => {
                     'OpenStreetMap</a> contributors'}
                 url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg" 
             />
-            <SetView />
+            <SetView center={ center } />
             { markers &&
                 markers.map((marker) =>
                     <AnimalMarker 
