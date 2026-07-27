@@ -140,3 +140,5 @@ nb-configuration.xml
 *.temp
 .cache/
 init_s3.sh
+weights/
+yolov8s-worldv2.pt
