@@ -19,6 +19,17 @@ node {
 		echo 'Image built'
 	}
 
+	stage('Build identification backend image') {
+		echo 'Building identification backend...'
+
+		dir('sighting_identification') {
+			retry(3) {
+				app = docker.build("wildledger_identification_image:latest")
+			}
+		}
+		echo 'Image built'
+	}
+
 
 	stage('Build web image') {
 		echo 'Building web image...'

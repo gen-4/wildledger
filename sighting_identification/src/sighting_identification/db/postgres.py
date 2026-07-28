@@ -37,6 +37,9 @@ def update_sighting_as_processing(sighting_id):
 def update_sighting_as_unrecognized(sighting_id):
     _update_sighting_status(sighting_id, 'UNRECOGNIZED')
 
+def update_sighting_as_unknown_species(sighting_id):
+    _update_sighting_status(sighting_id, 'UNKNOWN_SPECIES')
+
 def update_sighting_set_individual(sighting_id, individual_id):
     with _get_connection() as conn:
         with conn.cursor() as cursor:
