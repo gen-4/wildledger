@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.hibernate.Hibernate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gen_4.wildledger.auth.models.User;
 import com.gen_4.wildledger.auth.repositories.UserRepository;
+import com.gen_4.wildledger.sightings.models.MySightingProxy;
 import com.gen_4.wildledger.sightings.models.Sighting;
 import com.gen_4.wildledger.sightings.models.SightingProxy;
 import com.gen_4.wildledger.sightings.models.SightingStatus;
@@ -90,6 +93,12 @@ public class SightingsServiceImpl implements SightingsService {
     public List<SightingProxy> getSightings() {
         // TODO: This must just return the ones that are in a decent state, prolly confirmed
         return sightingRepository.findAllWithIndividual();
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<MySightingProxy> getMySightings(long userId, Pageable pageable) {
+        return sightingRepository.findMineWithIndividual(userId, pageable);
     }
 
 }
