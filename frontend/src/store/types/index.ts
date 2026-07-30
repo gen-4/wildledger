@@ -1,5 +1,5 @@
 import type { User } from "@/components/auth";
-import type { Position, Sighting } from "@/components/sightings/types";
+import type { Position, Sighting, MySightingsPage } from "@/components/sightings/types";
 
 export interface AuthState {
     user: User | null;
@@ -13,6 +13,7 @@ export interface AuthState {
 export interface SightingsState {
     location: Position;
     sightings: Array<Sighting>;
+    mySightings: MySightingsPage;
     loading: boolean;
     error: string | null | undefined;
 };

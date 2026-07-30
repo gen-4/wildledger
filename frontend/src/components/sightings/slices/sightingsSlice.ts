@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import api from '@/api/api';
 
 import type { SightingsState } from '@/store/types';
-import type { Position, SightingProxyReponse, SightingResponse } from '@/components/sightings/types';
+import type { MySightingsResponse, Position, SightingProxyReponse, SightingResponse } from '@/components/sightings/types';
 
 import { 
     CREATE_SIGHTING_DEFAULT_ERROR_MSG, 
@@ -47,9 +47,38 @@ export const getSightings = createAsyncThunk<
     }
 });
 
+export const getMySightings = createAsyncThunk<
+    MySightingsResponse,
+    { userId: number, page?: number, size?: number },
+    { rejectValue: string }
+>('mysightings/get', async ({ userId, page, size }, { rejectWithValue }) => {
+    try {
+        const response = await api.get(`/user/${userId}/sightings?page=${page}&size=${size}`);
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: GET_SIGHTINGS_DEFAULT_ERROR_MSG }));
+            return rejectWithValue(error.message || GET_SIGHTINGS_DEFAULT_ERROR_MSG);
+        }
+        const data: MySightingsResponse = await response.json();
+        return data;
+    } catch (error) {
+        return rejectWithValue((error as Error).message || GET_SIGHTINGS_DEFAULT_ERROR_MSG);
+    }
+});
+
 const initialState: SightingsState = {
     location: { lat: DEFAULT_LOCATION.lat, lng: DEFAULT_LOCATION.lng },
     sightings: [],
+    mySightings: {
+        sightings: [],
+        empty: true,
+        first: false,
+        last: false,
+        number: 0,
+        numberOfElements: 0,
+        size: 0,
+        totalElements: 0,
+        totalPages: 0
+    },
     loading: false,
     error: null
 };
@@ -70,7 +99,7 @@ const sightings = createSlice({
             })
             .addCase(create.fulfilled, (state, action) => {
                 state.loading = false;
-                state.sightings = [...state.sightings, {
+                state.mySightings.sightings = [...state.mySightings.sightings, {
                     id: action.payload.id,
                     individualId: action.payload.individualId,
                     name: action.payload.name,
@@ -109,6 +138,39 @@ const sightings = createSlice({
                 }))
             })
             .addCase(getSightings.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload ?? action.error.message ?? GET_SIGHTINGS_DEFAULT_ERROR_MSG;
+            })
+
+            .addCase(getMySightings.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(getMySightings.fulfilled, (state, action) => {
+                state.loading = false;
+                state.mySightings = {
+                    sightings: [
+                        ...state.mySightings.sightings,
+                        ...action.payload.content.map((proxy) => ({
+                            id: proxy.id,
+                            individualId: proxy.individualId,
+                            name: proxy.name,
+                            imagePath: proxy.imagePath,
+                            location: { lat: proxy.latitude, lng: proxy.longitude },
+                            status: proxy.status
+                        }))
+                    ],
+                    empty: action.payload.empty,
+                    first: action.payload.first,
+                    last: action.payload.last,
+                    number: action.payload.number,
+                    numberOfElements: action.payload.numberOfElements,
+                    size: action.payload.size,
+                    totalElements: action.payload.totalElements,
+                    totalPages: action.payload.totalPages
+                }
+            })
+            .addCase(getMySightings.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload ?? action.error.message ?? GET_SIGHTINGS_DEFAULT_ERROR_MSG;
             })

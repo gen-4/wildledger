@@ -25,7 +25,11 @@ const SetView = ({ center}: { center?: Position }) => {
     return null;
 };
 
-const Map = ({ center, markers }: { center?: { lat: number, lng: number }, markers?: Array<SightingMarker> }) => {
+const Map = ({ center, markers, displayIdOfSighting }: { 
+    center?: { lat: number, lng: number }, 
+    markers?: Array<SightingMarker>,
+    displayIdOfSighting?: boolean
+}) => {
     return (
         <MapContainer 
             center={ [DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng] } 
@@ -53,6 +57,7 @@ const Map = ({ center, markers }: { center?: { lat: number, lng: number }, marke
                         location={ marker.location } 
                         draggable={ marker.draggable } 
                         onDragEnd={ marker.onDragEnd }
+                        displayIdOfSighting={ displayIdOfSighting }
                     />
                 )
             }

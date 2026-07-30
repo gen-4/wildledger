@@ -49,6 +49,8 @@ public class SightingsController {
         @RequestAttribute long userId
     ) {
         String extension;
+        Sighting sighting;
+        SightingDto sightingDto;
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.contains(".")) {
             log.error("Error extracting extension of file {}: Does not contain extension", fileName);
@@ -67,7 +69,7 @@ public class SightingsController {
             throw new IllegalArgumentException("Invalid file extension: " + extension);
         }
 
-        Sighting sighting = sightingsService.createSighting(
+        sighting = sightingsService.createSighting(
             userId,
             sightingRequest.getLatitude(), 
             sightingRequest.getLongitude(), 
@@ -76,8 +78,10 @@ public class SightingsController {
             file
         );
 
+        sightingDto = SightingDtoConversor.toSightingDto(sighting);
+        sightingDto.setImagePath(storageService.getSightingImage(sighting.getImagePath()));
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(SightingDtoConversor.toSightingDto(sighting));
+            .body(sightingDto);
     }
 
     @GetMapping("/sightings")

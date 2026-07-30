@@ -27,6 +27,11 @@ const Header = () => {
             text: 'Sightings',
             link: '/sightings',
             display: !!isUser
+        },
+        {
+            text: 'My Sightings',
+            link: '/my-sightings',
+            display: !!isUser
         }
     ];
 
