@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY pyproject.toml /app/
 COPY main.py /app/
-COPY src /app/
+COPY src /app/src/
 
 RUN pip install --break-system-packages .
 
