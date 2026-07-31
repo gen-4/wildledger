@@ -1,5 +1,7 @@
 package com.gen_4.wildledger.sightings.dtos;
 
+import java.time.LocalDateTime;
+
 import com.gen_4.wildledger.sightings.models.SightingStatus;
 
 import lombok.AllArgsConstructor;
@@ -20,5 +22,6 @@ public class MySightingProxyDto {
     private double longitude;
     private String imagePath;
     private SightingStatus status;
+    private LocalDateTime createdAt;
     
 }

@@ -36,11 +36,13 @@ public interface SightingRepository extends JpaRepository<Sighting, Long> {
             s.latitude,
             s.longitude,
             s.imagePath,
-            s.status
+            s.status,
+            s.createdAt
         )
         FROM Sighting s
         LEFT JOIN s.individual i
         WHERE s.reporter.id = :userId
+        ORDER BY s.createdAt DESC
     """)
     public Page<MySightingProxy> findMineWithIndividual(long userId, Pageable pageable);
     

@@ -1,0 +1,60 @@
+.badge {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .2rem;
+    padding: .25rem 1rem;
+    border-radius: 10000px;
+}
+
+.badge span { 
+    font-size: .8rem;
+}
+
+.text { 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pending {
+    background-color: var(--green-dark);
+}
+
+.rejected {
+    background-color: var(--grey);
+}
+
+.cancelled {
+    background-color: var(--grey);
+}
+
+.unrecognized {
+    background-color: var(--warning);
+}
+
+.unknownSpecies {
+    background-color: var(--warning);
+}
+
+.failed {
+    background-color: var(--error);
+}
+
+.failedImage {
+    background-color: var(--error);
+}
+
+.processing {
+    background-color: var(--info);
+}
+
+.processed {
+    background-color: var(--green-light);
+}
+
+.confirmed {
+    background-color: var(--success);
+}

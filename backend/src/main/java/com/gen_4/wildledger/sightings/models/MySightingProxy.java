@@ -1,5 +1,7 @@
 package com.gen_4.wildledger.sightings.models;
 
+import java.sql.Timestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +18,6 @@ public class MySightingProxy {
     private double longitude;
     private String imagePath;
     private SightingStatus status;
+    private Timestamp createdAt;
 
 }

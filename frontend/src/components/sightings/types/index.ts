@@ -1,4 +1,4 @@
-const SightingStatus = {
+export const SightingStatus = {
     PENDING: 'PENDING',
     REJECTED: 'REJECTED',
     CANCELLED: 'CANCELLED',
@@ -43,7 +43,7 @@ export interface SightingMarker extends Sighting {
     displayIdOfSighting?: boolean;
 };
 
-export interface SightingProxyReponse {
+export interface SightingProxyResponse  {
     id: number;
     individualId?: number
     name?: string;
@@ -52,7 +52,8 @@ export interface SightingProxyReponse {
     longitude: number;
 };
 
-export interface MySightingProxy extends SightingProxyReponse {
+export interface MySightingProxy extends SightingProxyResponse  {
+    createdAt: Date;
     status: SightingStatus;
 }
 
