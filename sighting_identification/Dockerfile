@@ -8,6 +8,6 @@ COPY pyproject.toml /app/
 COPY main.py /app/
 COPY src /app/
 
-RUN pip install .
+RUN pip install --break-system-packages .
 
 CMD ["python", "main.py"]
