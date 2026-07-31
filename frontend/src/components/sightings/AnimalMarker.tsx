@@ -23,7 +23,7 @@ const AnimalMarker = ({
     }, [map]);
 
     const icon: IconOptions = {
-        iconUrl: imagePath? imagePath : '/fluke.svg',
+        iconUrl: imagePath? imagePath : `${import.meta.env.BASE_URL}fluke.svg`,
         iconSize
     };
 
