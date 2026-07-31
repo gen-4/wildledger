@@ -6,7 +6,10 @@ import type { SightingMarker } from '@/components/sightings/types';
 
 import '@/components/sightings/styles/leaflet.css'
 
-const AnimalMarker = ({ id, individualId, imagePath, name, location, draggable, onDragEnd }: SightingMarker) => {
+const AnimalMarker = ({ 
+    id, individualId, imagePath, name, 
+    location, draggable, onDragEnd, displayIdOfSighting 
+}: SightingMarker) => {
     const markerRef = useRef<L.Marker | null>(null);
     const map = useMap();
     const [zoom, setZoom] = useState(map.getZoom());
@@ -47,8 +50,11 @@ const AnimalMarker = ({ id, individualId, imagePath, name, location, draggable, 
             icon={ new Icon(icon) }
         >
             <Tooltip key={ `${zoom}-${id}` } direction="top" offset={ tooltipOffset } opacity={ 1 } permanent>
-                { individualId && <span>#{ individualId }</span> }
-                <span className="tooltip-title">{ name }</span>
+                { !displayIdOfSighting && individualId && <span>#{ individualId }</span> }
+                { displayIdOfSighting && <span>@{ id }</span> }
+                <span className="tooltip-title">
+                    { !displayIdOfSighting && individualId ? `#${individualId} ${name}` : name }
+                </span>
             </Tooltip>
         </Marker>
     );

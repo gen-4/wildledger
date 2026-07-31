@@ -1,0 +1,16 @@
+ALTER TABLE sighting DROP CONSTRAINT chk_status_options;
+
+ALTER TABLE sighting ADD CONSTRAINT chk_status_options CHECK (status IN 
+    (
+        'PENDING', 
+        'CONFIRMED', 
+        'REJECTED', 
+        'CANCELLED', 
+        'FAILED', 
+        'FAILED_IMAGE', 
+        'PROCESSING', 
+        'PROCESSED', 
+        'UNRECOGNIZED',
+        'UNKNOWN_SPECIES'
+    )
+);

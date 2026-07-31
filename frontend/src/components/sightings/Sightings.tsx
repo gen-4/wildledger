@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Map from '@/components/sightings/Map';
 import type { SightingMarker } from '@/components/sightings/types';
-import { getSightings, setLocation } from '@/components/sightings/slices/sightingsSlice';
+import { getSightings } from '@/components/sightings/slices/sightingsSlice';
 import { addMessage } from '@/store/appSlice';
 import { sightingsSelector } from '@/components/sightings/selectors';
 
@@ -38,19 +38,6 @@ const Sightings = () => {
             autoDismiss: true,
             dismissing: false
         })));
-        
-        navigator.geolocation.getCurrentPosition(
-            (position) => dispatch(setLocation({ lat: position.coords.latitude, lng: position.coords.longitude})),
-            () =>
-                dispatch(addMessage({
-                    id: '',
-                    type: MessageType.INFO,
-                    message: "Using default location",
-                    autoDismiss: true,
-                    dismissing: false
-                })),
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 300000 }
-        );
     }, [dispatch]);
     
     return (

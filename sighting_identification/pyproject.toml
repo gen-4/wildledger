@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sighting_identification"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "redis>=8.0.1",
+    "ultralytics==8.4.104",
+    "boto3",
+    "torch==2.13.0",
+    "open_clip_torch==3.3.0",
+    "pillow==12.3.0",
+    "transformers<5.0.0",
+    "psycopg2-binary==2.9.12",
+    "speciesnet==5.0.5",
+    "albumentations==1.4.24",
+    "pytorch-lightning==2.6.5"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

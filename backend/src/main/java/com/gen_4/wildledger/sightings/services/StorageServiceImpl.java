@@ -35,7 +35,8 @@ public class StorageServiceImpl implements StorageService {
     private static final Map<String, List<String>> ALLOWED_MIME_TYPES = Map.of(
         "image/png", List.of("png"),
         "image/jpeg", List.of("jpg", "jpeg"),
-        "image/webp", List.of("webp")
+        "image/webp", List.of("webp"),
+        "image/tiff", List.of("tif", "tiff")
     );
     
     @Value("${app.storage.max-file-size}")
@@ -48,6 +49,7 @@ public class StorageServiceImpl implements StorageService {
     private int expirationHours;
     
     // TODO: Create test for this
+    @Override
     public void saveSightingImage(MultipartFile file, String path) {
         if (file.getSize() > MAX_FILE_SIZE) {
             log.error(
@@ -58,7 +60,7 @@ public class StorageServiceImpl implements StorageService {
             );
 
             throw new IllegalArgumentException(String.format(
-                "Image too large: %s is  greater than limit %d", 
+                "Image too large: %s is %d, greater than limit %d", 
                 file.getOriginalFilename(),
                 file.getSize(),
                 MAX_FILE_SIZE
@@ -78,7 +80,7 @@ public class StorageServiceImpl implements StorageService {
             throw new IllegalArgumentException(String.format(
                 "Failed to detect MIME type for image %s",
                 file.getOriginalFilename()
-            ));
+            ), e);
         }
 
         if (!ALLOWED_MIME_TYPES.containsKey(detectedMimeType)) {
@@ -144,7 +146,7 @@ public class StorageServiceImpl implements StorageService {
 
         } catch (S3Exception e) {
             log.error(
-                "Error saving sighting image {} to S3 path path {}", 
+                "Error saving sighting image {} to S3 path {}", 
                 file.getOriginalFilename(), 
                 path,
                 e
@@ -155,6 +157,7 @@ public class StorageServiceImpl implements StorageService {
         }
     }
 
+    @Override
     public String getSightingImage(String path) {
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
             .signatureDuration(Duration.ofHours(expirationHours))

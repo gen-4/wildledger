@@ -3,8 +3,11 @@ package com.gen_4.wildledger.sightings.services;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.gen_4.wildledger.sightings.models.MySightingProxy;
 import com.gen_4.wildledger.sightings.models.Sighting;
 import com.gen_4.wildledger.sightings.models.SightingProxy;
 
@@ -20,5 +23,7 @@ public interface SightingsService {
     );
 
     public List<SightingProxy> getSightings();
+
+    public Page<MySightingProxy> getMySightings(long userId, Pageable pageable);
     
 }
